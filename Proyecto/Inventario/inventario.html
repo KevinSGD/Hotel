@@ -13,6 +13,7 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h1>Hotel Manager</h1>
+                <div class="module-badge">Inventario</div>
             </div>
             <div class="sidebar-user">
                 <div class="user-avatar">A</div>
@@ -23,43 +24,9 @@
             </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li class="nav-item" data-section="dashboard">
+                    <li class="nav-item active" data-section="dashboard">
                         <span class="material-symbols-outlined">dashboard</span>
                         <span>Dashboard</span>
-                    </li>
-                    
-                    <!-- Sección Ventas -->
-                    <li class="nav-section">
-                        <span class="section-title">Ventas</span>
-                    </li>
-                    <li class="nav-item" data-section="nueva-reserva">
-                        <span class="material-symbols-outlined">add_circle</span>
-                        <span>Nueva Reserva</span>
-                    </li>
-                    <li class="nav-item" data-section="consumo">
-                        <span class="material-symbols-outlined">room_service</span>
-                        <span>Registrar Consumo</span>
-                    </li>
-                    <li class="nav-item" data-section="historial">
-                        <span class="material-symbols-outlined">history</span>
-                        <span>Historial de Ventas</span>
-                    </li>
-                    <li class="nav-item" data-section="modificar">
-                        <span class="material-symbols-outlined">edit</span>
-                        <span>Modificar Reservas</span>
-                    </li>
-                    <li class="nav-item" data-section="factura">
-                        <span class="material-symbols-outlined">receipt_long</span>
-                        <span>Generar Factura</span>
-                    </li>
-                    
-                    <!-- Sección Inventario -->
-                    <li class="nav-section">
-                        <span class="section-title">Inventario</span>
-                    </li>
-                    <li class="nav-item active" data-section="inventario-dashboard">
-                        <span class="material-symbols-outlined">inventory_2</span>
-                        <span>Dashboard Inventario</span>
                     </li>
                     <li class="nav-item" data-section="agregar-producto">
                         <span class="material-symbols-outlined">add_box</span>
@@ -80,6 +47,10 @@
                 </ul>
             </nav>
             <div class="sidebar-footer">
+                <a href="index.html" class="module-switch-btn">
+                    <span class="material-symbols-outlined">storefront</span>
+                    <span>Ir a Ventas</span>
+                </a>
                 <button id="logout-btn" class="logout-btn" onclick="cerrarSesion()">
                     <span class="material-symbols-outlined">logout</span>
                     <span>Cerrar Sesión</span>
@@ -92,7 +63,7 @@
         <!-- Contenido principal -->
         <main class="main-content">
             <!-- Dashboard de Inventario -->
-            <section id="inventario-dashboard" class="content-section active">
+            <section id="dashboard" class="content-section active">
                 <div class="section-header">
                     <h2>Dashboard de Inventario</h2>
                 </div>
@@ -181,6 +152,7 @@
                                         <th>Tipo</th>
                                         <th>Producto</th>
                                         <th>Cantidad</th>
+                                        <th>Origen</th>
                                         <th>Usuario</th>
                                     </tr>
                                 </thead>
@@ -384,6 +356,11 @@
                                 <option value="entrada">Entradas</option>
                                 <option value="salida">Salidas</option>
                             </select>
+                            <select id="filtro-movimiento-origen" onchange="filtrarMovimientos()">
+                                <option value="todos">Todos los orígenes</option>
+                                <option value="inventario">Inventario</option>
+                                <option value="ventas">Ventas</option>
+                            </select>
                             <button class="btn-secondary" onclick="exportarMovimientos()">
                                 <span class="material-symbols-outlined">download</span> Exportar
                             </button>
@@ -399,6 +376,7 @@
                                     <th>Cantidad</th>
                                     <th>Motivo</th>
                                     <th>Referencia</th>
+                                    <th>Origen</th>
                                     <th>Usuario</th>
                                 </tr>
                             </thead>
@@ -659,6 +637,7 @@
                                 <th>Cantidad</th>
                                 <th>Motivo</th>
                                 <th>Referencia</th>
+                                <th>Origen</th>
                                 <th>Usuario</th>
                                 <th>Notas</th>
                             </tr>

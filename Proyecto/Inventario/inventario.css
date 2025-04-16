@@ -33,11 +33,25 @@
   .sidebar-header {
     padding: 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
   }
   
   .sidebar-header h1 {
     font-size: 1.5rem;
     font-weight: 600;
+  }
+  
+  .module-badge {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background-color: #303f9f;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
   }
   
   .sidebar-user {
@@ -74,15 +88,6 @@
     overflow-y: auto;
   }
   
-  .nav-section {
-    padding: 0.5rem 1.5rem;
-    margin-top: 1rem;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    opacity: 0.7;
-  }
-  
   .nav-item {
     display: flex;
     align-items: center;
@@ -99,6 +104,27 @@
   .nav-item.active {
     background-color: rgba(255, 255, 255, 0.2);
     border-left: 4px solid white;
+  }
+  
+  .module-switch-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background-color: #303f9f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+  }
+  
+  .module-switch-btn:hover {
+    background-color: #3949ab;
   }
   
   .logout-btn {
@@ -121,7 +147,8 @@
     background-color: rgba(255, 255, 255, 0.2);
   }
   
-  .logout-btn .material-symbols-outlined {
+  .logout-btn .material-symbols-outlined,
+  .module-switch-btn .material-symbols-outlined {
     font-size: 1.2rem;
   }
   
@@ -665,7 +692,7 @@
     .user-info,
     .nav-item span:not(.material-symbols-outlined),
     .sidebar-footer,
-    .nav-section {
+    .module-badge {
       display: none;
     }
   
@@ -682,7 +709,8 @@
       grid-template-columns: 1fr;
     }
   
-    .logout-btn span:not(.material-symbols-outlined) {
+    .logout-btn span:not(.material-symbols-outlined),
+    .module-switch-btn span:not(.material-symbols-outlined) {
       display: none;
     }
   }
