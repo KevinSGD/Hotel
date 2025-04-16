@@ -1,5 +1,4 @@
-import { Chart } from "@/components/ui/chart"
-// Datos de ejemplo para contabilidad
+
 let transacciones = [
   {
     id: 1,
