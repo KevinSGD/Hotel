@@ -309,11 +309,11 @@ let productos = [
   // Inicialización
   document.addEventListener("DOMContentLoaded", () => {
     // Mostrar fecha actual
-    const fechaActual = new Date()
-    document.getElementById("current-date").textContent = fechaActual.toLocaleDateString()
+    //const fechaActual = new Date()
+    //document.getElementById("current-date").textContent = fechaActual.toLocaleDateString()
   
     // Establecer fecha actual en el campo de fecha de movimiento
-    document.getElementById("movimiento-fecha").value = fechaActual.toISOString().split("T")[0]
+    //document.getElementById("movimiento-fecha").value = fechaActual.toISOString().split("T")[0]
   
     // Inicializar navegación
     initNavigation()
