@@ -1,9 +1,4 @@
-// Asumiendo que este es el archivo principal que necesita modificación
 
-// Importar Chart.js si no está ya incluido en el HTML
-// <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-// Variables globales para los gráficos
 let departamentosCanvas
 let asistenciaCanvas
 let departamentosCtx
