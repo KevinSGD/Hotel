@@ -1,5 +1,4 @@
-import { Chart } from "@/components/ui/chart"
-// Datos de ejemplo para empleados
+
 const empleados = [
   {
     id: 1,
