@@ -1,884 +1,1100 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Gestión Hotelera - Módulo de Clientes</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link rel="stylesheet" href="./styles.css">
-    <link rel="stylesheet" href="./clientes-styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Clientes - Sistema Hotelero</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="clientes-styles.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar / Menú lateral -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h1>Hotel Manager</h1>
+  <div class="app-container">
+    <!-- Sidebar / Menú lateral -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h1>Hotel System</h1>
+      </div>
+      <div class="sidebar-user">
+        <div class="user-avatar">A</div>
+        <div class="user-info">
+          <div class="user-name">Admin</div>
+          <div class="user-role">Administrador</div>
+        </div>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-section">Navegación</div>
+        <div class="nav-item" data-section="dashboard">
+          <span class="material-symbols-outlined">dashboard</span>
+          <span>Dashboard</span>
+        </div>
+        <div class="nav-item" data-section="registro">
+          <span class="material-symbols-outlined">person_add</span>
+          <span>Registro de Clientes</span>
+        </div>
+        <div class="nav-item" data-section="busqueda">
+          <span class="material-symbols-outlined">search</span>
+          <span>Búsqueda de Clientes</span>
+        </div>
+        <div class="nav-item" data-section="historial">
+          <span class="material-symbols-outlined">history</span>
+          <span>Historial de Clientes</span>
+        </div>
+        <div class="nav-item" data-section="clasificacion">
+          <span class="material-symbols-outlined">stars</span>
+          <span>Clasificación de Clientes</span>
+        </div>
+        <div class="nav-section">Sistema</div>
+        <div class="nav-item">
+          <span class="material-symbols-outlined">settings</span>
+          <span>Configuración</span>
+        </div>
+      </div>
+      <button class="logout-btn">
+        <span class="material-symbols-outlined">logout</span>
+        <span>Cerrar Sesión</span>
+      </button>
+      <div class="sidebar-footer">
+        v1.0.0 © 2023 Hotel System
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+      <!-- Dashboard -->
+      <div class="content-section active" id="dashboard">
+        <div class="section-header">
+          <h2>Dashboard de Clientes</h2>
+        </div>
+
+        <div class="dashboard-stats">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <span class="material-symbols-outlined">group</span>
             </div>
-            <div class="sidebar-user">
-                <div class="user-avatar">A</div>
-                <div class="user-info">
-                    <div class="user-name">Admin</div>
-                    <div class="user-role">Administrador</div>
+            <div class="stat-info">
+              <h3>Total de Clientes</h3>
+              <div class="stat-value">1,245</div>
+              <div class="stat-label">+12% este mes</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <span class="material-symbols-outlined">hotel</span>
+            </div>
+            <div class="stat-info">
+              <h3>Check-ins Hoy</h3>
+              <div class="stat-value">24</div>
+              <div class="stat-label">8 pendientes</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <span class="material-symbols-outlined">logout</span>
+            </div>
+            <div class="stat-info">
+              <h3>Check-outs Hoy</h3>
+              <div class="stat-value">18</div>
+              <div class="stat-label">3 pendientes</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <span class="material-symbols-outlined">stars</span>
+            </div>
+            <div class="stat-info">
+              <h3>Clientes VIP</h3>
+              <div class="stat-value">87</div>
+              <div class="stat-label">7 hospedados actualmente</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-recent">
+          <div class="recent-checkins">
+            <div class="card-header">
+              <h3>Check-ins Recientes</h3>
+              <button class="btn-text">Ver todos</button>
+            </div>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Cliente</th>
+                    <th>Habitación</th>
+                    <th>Llegada</th>
+                    <th>Salida</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="client-info">
+                        <div class="client-name">Carlos Rodríguez</div>
+                        <div class="client-type vip">VIP</div>
+                      </div>
+                    </td>
+                    <td>301 - Suite</td>
+                    <td>Hoy, 14:00</td>
+                    <td>23/04/2023</td>
+                    <td><span class="status-active">Activo</span></td>
+                    <td>
+                      <button class="btn-icon" title="Ver detalles">
+                        <span class="material-symbols-outlined">visibility</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="client-info">
+                        <div class="client-name">María González</div>
+                        <div class="client-type frequent">Frecuente</div>
+                      </div>
+                    </td>
+                    <td>205 - Doble</td>
+                    <td>Hoy, 12:30</td>
+                    <td>20/04/2023</td>
+                    <td><span class="status-active">Activo</span></td>
+                    <td>
+                      <button class="btn-icon" title="Ver detalles">
+                        <span class="material-symbols-outlined">visibility</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="client-info">
+                        <div class="client-name">Juan Pérez</div>
+                        <div class="client-type new">Nuevo</div>
+                      </div>
+                    </td>
+                    <td>110 - Individual</td>
+                    <td>Hoy, 10:15</td>
+                    <td>19/04/2023</td>
+                    <td><span class="status-active">Activo</span></td>
+                    <td>
+                      <button class="btn-icon" title="Ver detalles">
+                        <span class="material-symbols-outlined">visibility</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="client-info">
+                        <div class="client-name">Ana Martínez</div>
+                        <div class="client-type new">Nuevo</div>
+                      </div>
+                    </td>
+                    <td>412 - Familiar</td>
+                    <td>Ayer, 16:45</td>
+                    <td>25/04/2023</td>
+                    <td><span class="status-active">Activo</span></td>
+                    <td>
+                      <button class="btn-icon" title="Ver detalles">
+                        <span class="material-symbols-outlined">visibility</span>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="client-distribution">
+            <div class="card-header">
+              <h3>Distribución de Clientes</h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="clientTypeChart"></canvas>
+            </div>
+            <div class="client-types-list">
+              <div class="client-type-item">
+                <div class="type-color" style="background-color: #4CAF50;"></div>
+                <div class="type-name">Nuevos</div>
+                <div class="type-count">45%</div>
+              </div>
+              <div class="client-type-item">
+                <div class="type-color" style="background-color: #2196F3;"></div>
+                <div class="type-name">Frecuentes</div>
+                <div class="type-count">35%</div>
+              </div>
+              <div class="client-type-item">
+                <div class="type-color" style="background-color: #FFC107;"></div>
+                <div class="type-name">VIP</div>
+                <div class="type-count">20%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registro de Clientes -->
+      <div class="content-section" id="registro">
+        <div class="section-header">
+          <h2>Registro de Clientes (Check-in)</h2>
+        </div>
+
+        <div class="content-card">
+          <form id="clienteForm">
+            <div class="form-columns">
+              <div class="form-column">
+                <h3>Información Personal</h3>
+                <div class="form-group">
+                  <label for="tipoDocumento">Tipo de Documento</label>
+                  <select id="tipoDocumento" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="dni">DNI</option>
+                    <option value="pasaporte">Pasaporte</option>
+                    <option value="cedula">Cédula</option>
+                    <option value="otro">Otro</option>
+                  </select>
                 </div>
+                <div class="form-group">
+                  <label for="numeroDocumento">Número de Documento</label>
+                  <input type="text" id="numeroDocumento" required>
+                </div>
+                <div class="form-group">
+                  <label for="nombre">Nombre</label>
+                  <input type="text" id="nombre" required>
+                </div>
+                <div class="form-group">
+                  <label for="apellido">Apellido</label>
+                  <input type="text" id="apellido" required>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                  <label for="telefono">Teléfono</label>
+                  <input type="tel" id="telefono" required>
+                </div>
+                <div class="form-group">
+                  <label for="nacionalidad">Nacionalidad</label>
+                  <input type="text" id="nacionalidad">
+                </div>
+                <div class="form-group">
+                  <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                  <input type="date" id="fechaNacimiento">
+                </div>
+              </div>
+              <div class="form-column">
+                <h3>Información de Hospedaje</h3>
+                <div class="form-group">
+                  <label for="tipoHabitacion">Tipo de Habitación</label>
+                  <select id="tipoHabitacion" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="individual">Individual</option>
+                    <option value="doble">Doble</option>
+                    <option value="suite">Suite</option>
+                    <option value="familiar">Familiar</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="numeroHabitacion">Número de Habitación</label>
+                  <select id="numeroHabitacion" required>
+                    <option value="">Seleccionar...</option>
+                    <option value="101">101 - Individual</option>
+                    <option value="102">102 - Individual</option>
+                    <option value="201">201 - Doble</option>
+                    <option value="202">202 - Doble</option>
+                    <option value="301">301 - Suite</option>
+                    <option value="401">401 - Familiar</option>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="fechaEntrada">Fecha de Entrada</label>
+                    <input type="date" id="fechaEntrada" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="horaEntrada">Hora de Entrada</label>
+                    <input type="time" id="horaEntrada" required>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="fechaSalida">Fecha de Salida</label>
+                    <input type="date" id="fechaSalida" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="horaSalida">Hora de Salida</label>
+                    <input type="time" id="horaSalida" required>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="tipoCliente">Tipo de Cliente</label>
+                  <select id="tipoCliente" required>
+                    <option value="nuevo">Nuevo</option>
+                    <option value="frecuente">Frecuente</option>
+                    <option value="vip">VIP</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="notasEspeciales">Notas Especiales (Alergias, Preferencias)</label>
+                  <textarea id="notasEspeciales" rows="4"></textarea>
+                </div>
+              </div>
             </div>
-            <nav class="sidebar-nav">
-                <div class="nav-section">Navegación</div>
-                <ul>
-                    <li class="nav-item" data-section="dashboard">
-                        <span class="material-symbols-outlined">dashboard</span>
-                        <span>Dashboard</span>
-                    </li>
-                    <li class="nav-item active" data-section="clientes">
-                        <span class="material-symbols-outlined">person</span>
-                        <span>Clientes</span>
-                    </li>
-                    <li class="nav-item" data-section="busqueda">
-                        <span class="material-symbols-outlined">search</span>
-                        <span>Búsqueda</span>
-                    </li>
-                    <li class="nav-item" data-section="historial">
+            <div class="form-actions">
+              <button type="button" class="btn-secondary">Cancelar</button>
+              <button type="submit" class="btn-primary">
+                <span class="material-symbols-outlined">check</span>
+                Registrar Check-in
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Búsqueda de Clientes -->
+      <div class="content-section" id="busqueda">
+        <div class="section-header">
+          <h2>Búsqueda de Clientes</h2>
+        </div>
+
+        <div class="content-card">
+          <div class="filters">
+            <div class="filter-group">
+              <div class="search-container">
+                <input type="text" id="searchCliente" placeholder="Buscar por nombre o documento...">
+                <button class="btn-primary">
+                  <span class="material-symbols-outlined">search</span>
+                  Buscar
+                </button>
+              </div>
+            </div>
+            <div class="filter-actions">
+              <button class="btn-secondary">
+                <span class="material-symbols-outlined">filter_list</span>
+                Filtros
+              </button>
+              <button class="btn-secondary">
+                <span class="material-symbols-outlined">download</span>
+                Exportar
+              </button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Documento</th>
+                  <th>Contacto</th>
+                  <th>Última Visita</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="client-info">
+                      <div class="client-name">Carlos Rodríguez</div>
+                      <div class="client-type vip">VIP</div>
+                    </div>
+                  </td>
+                  <td>DNI: 28456789</td>
+                  <td>carlos@email.com</td>
+                  <td>Actualmente</td>
+                  <td><span class="status-active">Hospedado</span></td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="btn-icon" title="Ver detalles">
+                        <span class="material-symbols-outlined">visibility</span>
+                      </button>
+                      <button class="btn-icon" title="Editar">
+                        <span class="material-symbols-outlined">edit</span>
+                      </button>
+                      <button class="btn-icon" title="Historial">
                         <span class="material-symbols-outlined">history</span>
-                        <span>Historial</span>
-                    </li>
-                    <li class="nav-item" data-section="clasificacion">
-                        <span class="material-symbols-outlined">star</span>
-                        <span>Clasificación</span>
-                    </li>
-                </ul>
-                <div class="nav-section">Acciones</div>
-                <ul>
-                    <li class="nav-item" onclick="openModal('nuevo-cliente-modal')">
-                        <span class="material-symbols-outlined">person_add</span>
-                        <span>Nuevo Cliente</span>
-                    </li>
-                    <li class="nav-item" onclick="openModal('check-in-modal')">
-                        <span class="material-symbols-outlined">login</span>
-                        <span>Check-in</span>
-                    </li>
-                    <li class="nav-item" onclick="openModal('check-out-modal')">
-                        <span class="material-symbols-outlined">logout</span>
-                        <span>Check-out</span>
-                    </li>
-                </ul>
-            </nav>
-            <button class="logout-btn" onclick="cerrarSesion()">
-                <span class="material-symbols-outlined">logout</span>
-                <span>Cerrar sesión</span>
-            </button>
-            <div class="sidebar-footer">
-                v1.0.0 © 2023 Hotel Manager
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="client-info">
+                      <div class="client-name">María González</div>
+                      <div class="client-type frequent">Frecuente</div>
+                    </div>
+                  </td>
+                  <td>Pasaporte: AB123456</td>
+                  <td>maria@email.com</td>
+                  <td>Actualmente</td>
+                  <td><span class="status-active">Hospedado</span></td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="btn-icon" title="Ver detalles">
+                        <span class="material-symbols-outlined">visibility</span>
+                      </button>
+                      <button class="btn-icon" title="Editar">
+                        <span class="material-symbols-outlined">edit</span>
+                      </button>
+                      <button class="btn-icon" title="Historial">
+                        <span class="material-symbols-outlined">history</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="client-info">
+                      <div class="client-name">Roberto Sánchez</div>
+                      <div class="client-type frequent">Frecuente</div>
+                    </div>
+                  </td>
+                  <td>DNI: 34567890</td>
+                  <td>roberto@email.com</td>
+                  <td>15/03/2023</td>
+                  <td><span class="status-inactive">No hospedado</span></td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="btn-icon" title="Ver detalles">
+                        <span class="material-symbols-outlined">visibility</span>
+                      </button>
+                      <button class="btn-icon" title="Editar">
+                        <span class="material-symbols-outlined">edit</span>
+                      </button>
+                      <button class="btn-icon" title="Historial">
+                        <span class="material-symbols-outlined">history</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="client-info">
+                      <div class="client-name">Laura Martínez</div>
+                      <div class="client-type vip">VIP</div>
+                    </div>
+                  </td>
+                  <td>Pasaporte: CD789012</td>
+                  <td>laura@email.com</td>
+                  <td>02/04/2023</td>
+                  <td><span class="status-inactive">No hospedado</span></td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="btn-icon" title="Ver detalles">
+                        <span class="material-symbols-outlined">visibility</span>
+                      </button>
+                      <button class="btn-icon" title="Editar">
+                        <span class="material-symbols-outlined">edit</span>
+                      </button>
+                      <button class="btn-icon" title="Historial">
+                        <span class="material-symbols-outlined">history</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="client-info">
+                      <div class="client-name">Pedro López</div>
+                      <div class="client-type new">Nuevo</div>
+                    </div>
+                  </td>
+                  <td>DNI: 45678901</td>
+                  <td>pedro@email.com</td>
+                  <td>10/04/2023</td>
+                  <td><span class="status-inactive">No hospedado</span></td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="btn-icon" title="Ver detalles">
+                        <span class="material-symbols-outlined">visibility</span>
+                      </button>
+                      <button class="btn-icon" title="Editar">
+                        <span class="material-symbols-outlined">edit</span>
+                      </button>
+                      <button class="btn-icon" title="Historial">
+                        <span class="material-symbols-outlined">history</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <button class="btn-text" disabled>Anterior</button>
+            <div class="page-numbers">
+              <button class="btn-text active">1</button>
+              <button class="btn-text">2</button>
+              <button class="btn-text">3</button>
+              <span>...</span>
+              <button class="btn-text">10</button>
             </div>
+            <button class="btn-text">Siguiente</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Historial de Clientes -->
+      <div class="content-section" id="historial">
+        <div class="section-header">
+          <h2>Historial de Reservas y Consumos</h2>
         </div>
 
-        <!-- Contenido principal -->
-        <div class="main-content">
-            <!-- Dashboard -->
-            <section id="dashboard" class="content-section">
-                <div class="section-header">
-                    <h2>Dashboard de Clientes</h2>
-                    <div class="current-date" id="current-date"></div>
-                </div>
+        <div class="content-card">
+          <div class="client-selector">
+            <label for="clienteHistorial">Seleccionar Cliente:</label>
+            <select id="clienteHistorial">
+              <option value="">Seleccionar cliente...</option>
+              <option value="1">Carlos Rodríguez (VIP)</option>
+              <option value="2">María González (Frecuente)</option>
+              <option value="3">Roberto Sánchez (Frecuente)</option>
+              <option value="4">Laura Martínez (VIP)</option>
+              <option value="5">Pedro López (Nuevo)</option>
+            </select>
+          </div>
 
-                <div class="dashboard-stats">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <span class="material-symbols-outlined">group</span>
-                        </div>
-                        <div class="stat-info">
-                            <h3>Total Clientes</h3>
-                            <div class="stat-value" id="total-clientes">0</div>
-                            <div class="stat-label">Registrados en el sistema</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <span class="material-symbols-outlined">login</span>
-                        </div>
-                        <div class="stat-info">
-                            <h3>Check-ins Hoy</h3>
-                            <div class="stat-value" id="checkins-hoy">0</div>
-                            <div class="stat-label">Clientes que ingresaron hoy</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <span class="material-symbols-outlined">logout</span>
-                        </div>
-                        <div class="stat-info">
-                            <h3>Check-outs Hoy</h3>
-                            <div class="stat-value" id="checkouts-hoy">0</div>
-                            <div class="stat-label">Clientes que salieron hoy</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <span class="material-symbols-outlined">star</span>
-                        </div>
-                        <div class="stat-info">
-                            <h3>Clientes VIP</h3>
-                            <div class="stat-value" id="clientes-vip">0</div>
-                            <div class="stat-label">Clientes con estatus VIP</div>
-                        </div>
-                    </div>
+          <div class="client-profile">
+            <div class="profile-header">
+              <div class="profile-avatar">CR</div>
+              <div class="profile-info">
+                <h3>Carlos Rodríguez</h3>
+                <div class="profile-details">
+                  <span class="client-type vip">VIP</span>
+                  <span>DNI: 28456789</span>
+                  <span>carlos@email.com</span>
+                  <span>+34 612 345 678</span>
                 </div>
+              </div>
+            </div>
+            <div class="profile-stats">
+              <div class="stat-item">
+                <div class="stat-value">12</div>
+                <div class="stat-label">Visitas</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">45</div>
+                <div class="stat-label">Noches</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">€8,750</div>
+                <div class="stat-label">Gasto Total</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">€2,300</div>
+                <div class="stat-label">Último Año</div>
+              </div>
+            </div>
+          </div>
 
-                <div class="dashboard-recent">
-                    <div class="recent-movements">
-                        <div class="card-header">
-                            <h3>Clientes Recientes</h3>
-                            <button class="btn-text" onclick="cargarClientesRecientes()">
-                                <span class="material-symbols-outlined">refresh</span>
-                                Actualizar
-                            </button>
-                        </div>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Documento</th>
-                                        <th>Habitación</th>
-                                        <th>Check-in</th>
-                                        <th>Check-out</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="clientes-recientes-table">
-                                    <!-- Datos cargados dinámicamente -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="inventory-summary">
-                        <div class="card-header">
-                            <h3>Distribución de Clientes</h3>
-                        </div>
-                        <div class="category-chart" id="clientes-chart">
-                            <!-- Gráfico cargado dinámicamente -->
-                        </div>
-                        <div class="category-list">
-                            <div class="category-item">
-                                <div class="category-color" style="background-color: #1a237e;"></div>
-                                <div class="category-name">Nuevos</div>
-                                <div class="category-count" id="count-nuevos">0</div>
-                            </div>
-                            <div class="category-item">
-                                <div class="category-color" style="background-color: #303f9f;"></div>
-                                <div class="category-name">Frecuentes</div>
-                                <div class="category-count" id="count-frecuentes">0</div>
-                            </div>
-                            <div class="category-item">
-                                <div class="category-color" style="background-color: #7986cb;"></div>
-                                <div class="category-name">VIP</div>
-                                <div class="category-count" id="count-vip">0</div>
-                            </div>
-                        </div>
-                    </div>
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="reservas">Historial de Reservas</button>
+            <button class="tab-btn" data-tab="consumos">Historial de Consumos</button>
+            <button class="tab-btn" data-tab="notas">Notas Especiales</button>
+          </div>
+
+          <div class="tab-content active" id="reservas">
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Habitación</th>
+                    <th>Entrada</th>
+                    <th>Salida</th>
+                    <th>Noches</th>
+                    <th>Tarifa</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>15/04/2023</td>
+                    <td>301 - Suite</td>
+                    <td>15/04/2023</td>
+                    <td>23/04/2023</td>
+                    <td>8</td>
+                    <td>€180/noche</td>
+                    <td>€1,440</td>
+                    <td><span class="status-active">Activo</span></td>
+                  </tr>
+                  <tr>
+                    <td>02/03/2023</td>
+                    <td>301 - Suite</td>
+                    <td>02/03/2023</td>
+                    <td>05/03/2023</td>
+                    <td>3</td>
+                    <td>€180/noche</td>
+                    <td>€540</td>
+                    <td><span class="status-completed">Completado</span></td>
+                  </tr>
+                  <tr>
+                    <td>15/01/2023</td>
+                    <td>205 - Doble</td>
+                    <td>15/01/2023</td>
+                    <td>20/01/2023</td>
+                    <td>5</td>
+                    <td>€120/noche</td>
+                    <td>€600</td>
+                    <td><span class="status-completed">Completado</span></td>
+                  </tr>
+                  <tr>
+                    <td>10/12/2022</td>
+                    <td>301 - Suite</td>
+                    <td>10/12/2022</td>
+                    <td>15/12/2022</td>
+                    <td>5</td>
+                    <td>€180/noche</td>
+                    <td>€900</td>
+                    <td><span class="status-completed">Completado</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-content" id="consumos">
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Servicio</th>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>17/04/2023</td>
+                    <td>Restaurante</td>
+                    <td>Cena - Menú Degustación</td>
+                    <td>2</td>
+                    <td>€65</td>
+                    <td>€130</td>
+                    <td><span class="status-paid">Pagado</span></td>
+                  </tr>
+                  <tr>
+                    <td>16/04/2023</td>
+                    <td>Spa</td>
+                    <td>Masaje Relajante</td>
+                    <td>1</td>
+                    <td>€85</td>
+                    <td>€85</td>
+                    <td><span class="status-paid">Pagado</span></td>
+                  </tr>
+                  <tr>
+                    <td>16/04/2023</td>
+                    <td>Minibar</td>
+                    <td>Consumo Minibar</td>
+                    <td>1</td>
+                    <td>€45</td>
+                    <td>€45</td>
+                    <td><span class="status-pending">Pendiente</span></td>
+                  </tr>
+                  <tr>
+                    <td>03/03/2023</td>
+                    <td>Restaurante</td>
+                    <td>Desayuno Buffet</td>
+                    <td>2</td>
+                    <td>€25</td>
+                    <td>€50</td>
+                    <td><span class="status-paid">Pagado</span></td>
+                  </tr>
+                  <tr>
+                    <td>03/03/2023</td>
+                    <td>Servicio a la habitación</td>
+                    <td>Cena en la habitación</td>
+                    <td>2</td>
+                    <td>€40</td>
+                    <td>€80</td>
+                    <td><span class="status-paid">Pagado</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-content" id="notas">
+            <div class="special-notes">
+              <div class="note-card">
+                <div class="note-header">
+                  <h4>Preferencias de Habitación</h4>
+                  <span class="note-date">Actualizado: 15/04/2023</span>
                 </div>
-            </section>
+                <div class="note-content">
+                  <p>Prefiere habitaciones en pisos altos con vista a la ciudad. Solicita almohadas extra firmes y agua mineral sin gas en la habitación.</p>
+                </div>
+              </div>
+              <div class="note-card">
+                <div class="note-header">
+                  <h4>Alergias Alimentarias</h4>
+                  <span class="note-date">Actualizado: 02/03/2023</span>
+                </div>
+                <div class="note-content">
+                  <p>Alergia a los frutos secos y mariscos. Informar siempre al restaurante antes de servir cualquier comida.</p>
+                </div>
+              </div>
+              <div class="note-card">
+                <div class="note-header">
+                  <h4>Preferencias de Servicio</h4>
+                  <span class="note-date">Actualizado: 15/01/2023</span>
+                </div>
+                <div class="note-content">
+                  <p>Solicita servicio de limpieza por la tarde, no por la mañana. Prefiere periódico impreso entregado a la habitación cada mañana.</p>
+                </div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-primary">
+                <span class="material-symbols-outlined">add</span>
+                Añadir Nota
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-            <!-- Clientes -->
-            <section id="clientes" class="content-section active">
-                <div class="section-header">
-                    <h2>Gestión de Clientes</h2>
-                    <button class="btn-primary" onclick="openModal('nuevo-cliente-modal')">
-                        <span class="material-symbols-outlined">person_add</span>
-                        Nuevo Cliente
+      <!-- Clasificación de Clientes -->
+      <div class="content-section" id="clasificacion">
+        <div class="section-header">
+          <h2>Clasificación de Clientes</h2>
+        </div>
+
+        <div class="content-card">
+          <div class="filters">
+            <div class="filter-group">
+              <div class="form-group">
+                <label for="filtroClasificacion">Filtrar por Clasificación</label>
+                <select id="filtroClasificacion">
+                  <option value="todos">Todos</option>
+                  <option value="vip">VIP</option>
+                  <option value="frecuente">Frecuente</option>
+                  <option value="nuevo">Nuevo</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ordenarPor">Ordenar por</label>
+                <select id="ordenarPor">
+                  <option value="nombre">Nombre</option>
+                  <option value="visitas">Número de Visitas</option>
+                  <option value="gasto">Gasto Total</option>
+                  <option value="ultima">Última Visita</option>
+                </select>
+              </div>
+            </div>
+            <div class="filter-actions">
+              <button class="btn-secondary">
+                <span class="material-symbols-outlined">download</span>
+                Exportar
+              </button>
+            </div>
+          </div>
+
+          <div class="client-categories">
+            <div class="category-card vip-card">
+              <div class="category-header">
+                <h3>Clientes VIP</h3>
+                <div class="category-count">87 clientes</div>
+              </div>
+              <div class="category-description">
+                <p>Clientes con más de 10 visitas o gasto superior a €5,000 en el último año. Beneficios especiales y atención personalizada.</p>
+              </div>
+              <button class="btn-text">Ver todos</button>
+            </div>
+            <div class="category-card frequent-card">
+              <div class="category-header">
+                <h3>Clientes Frecuentes</h3>
+                <div class="category-count">245 clientes</div>
+              </div>
+              <div class="category-description">
+                <p>Clientes con 3-10 visitas o gasto entre €1,000 y €5,000 en el último año. Descuentos y beneficios especiales.</p>
+              </div>
+              <button class="btn-text">Ver todos</button>
+            </div>
+            <div class="category-card new-card">
+              <div class="category-header">
+                <h3>Clientes Nuevos</h3>
+                <div class="category-count">913 clientes</div>
+              </div>
+              <div class="category-description">
+                <p>Clientes con menos de 3 visitas o primer año en el hotel. Oportunidad para convertirlos en clientes frecuentes.</p>
+              </div>
+              <button class="btn-text">Ver todos</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Contacto</th>
+                  <th>Visitas</th>
+                  <th>Última Visita</th>
+                  <th>Gasto Total</th>
+                  <th>Clasificación</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="client-info">
+                      <div class="client-name">Carlos Rodríguez</div>
+                    </div>
+                  </td>
+                  <td>carlos@email.com</td>
+                  <td>12</td>
+                  <td>Actualmente</td>
+                  <td>€8,750</td>
+                  <td>
+                    <select class="classification-select vip">
+                      <option value="vip" selected>VIP</option>
+                      <option value="frecuente">Frecuente</option>
+                      <option value="nuevo">Nuevo</option>
+                    </select>
+                  </td>
+                  <td>
+                    <button class="btn-icon" title="Ver detalles">
+                      <span class="material-symbols-outlined">visibility</span>
                     </button>
-                </div>
-
-                <div class="content-card">
-                    <div class="filters">
-                        <div class="filter-group">
-                            <div class="form-group">
-                                <label for="filtro-estado">Estado</label>
-                                <select id="filtro-estado">
-                                    <option value="todos">Todos</option>
-                                    <option value="activo">Activo</option>
-                                    <option value="inactivo">Inactivo</option>
-                                    <option value="check-in">En Check-in</option>
-                                    <option value="check-out">En Check-out</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="filtro-clasificacion">Clasificación</label>
-                                <select id="filtro-clasificacion">
-                                    <option value="todos">Todos</option>
-                                    <option value="nuevo">Nuevo</option>
-                                    <option value="frecuente">Frecuente</option>
-                                    <option value="vip">VIP</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="filter-actions">
-                            <div class="search-container">
-                                <input type="text" id="buscar-cliente" placeholder="Buscar por nombre o documento">
-                                <button class="btn-primary" onclick="buscarClientes()">
-                                    <span class="material-symbols-outlined">search</span>
-                                </button>
-                            </div>
-                        </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="client-info">
+                      <div class="client-name">María González</div>
                     </div>
-
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Documento</th>
-                                    <th>Email</th>
-                                    <th>Teléfono</th>
-                                    <th>Clasificación</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="clientes-table">
-                                <!-- Datos cargados dinámicamente -->
-                            </tbody>
-                        </table>
+                  </td>
+                  <td>maria@email.com</td>
+                  <td>8</td>
+                  <td>Actualmente</td>
+                  <td>€4,200</td>
+                  <td>
+                    <select class="classification-select frequent">
+                      <option value="vip">VIP</option>
+                      <option value="frecuente" selected>Frecuente</option>
+                      <option value="nuevo">Nuevo</option>
+                    </select>
+                  </td>
+                  <td>
+                    <button class="btn-icon" title="Ver detalles">
+                      <span class="material-symbols-outlined">visibility</span>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="client-info">
+                      <div class="client-name">Roberto Sánchez</div>
                     </div>
-                </div>
-            </section>
-
-            <!-- Búsqueda -->
-            <section id="busqueda" class="content-section">
-                <div class="section-header">
-                    <h2>Búsqueda de Clientes</h2>
-                </div>
-
-                <div class="content-card">
-                    <div class="form-group">
-                        <label for="busqueda-avanzada">Buscar cliente</label>
-                        <div class="search-container">
-                            <input type="text" id="busqueda-avanzada" placeholder="Nombre, documento, email o teléfono">
-                            <button class="btn-primary" onclick="busquedaAvanzada()">
-                                <span class="material-symbols-outlined">search</span>
-                                Buscar
-                            </button>
-                        </div>
+                  </td>
+                  <td>roberto@email.com</td>
+                  <td>5</td>
+                  <td>15/03/2023</td>
+                  <td>€2,800</td>
+                  <td>
+                    <select class="classification-select frequent">
+                      <option value="vip">VIP</option>
+                      <option value="frecuente" selected>Frecuente</option>
+                      <option value="nuevo">Nuevo</option>
+                    </select>
+                  </td>
+                  <td>
+                    <button class="btn-icon" title="Ver detalles">
+                      <span class="material-symbols-outlined">visibility</span>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="client-info">
+                      <div class="client-name">Laura Martínez</div>
                     </div>
-
-                    <div id="resultados-busqueda" class="hidden">
-                        <h3>Resultados de la búsqueda</h3>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Documento</th>
-                                        <th>Email</th>
-                                        <th>Teléfono</th>
-                                        <th>Clasificación</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="resultados-table">
-                                    <!-- Datos cargados dinámicamente -->
-                                </tbody>
-                            </table>
-                        </div>
+                  </td>
+                  <td>laura@email.com</td>
+                  <td>15</td>
+                  <td>02/04/2023</td>
+                  <td>€12,500</td>
+                  <td>
+                    <select class="classification-select vip">
+                      <option value="vip" selected>VIP</option>
+                      <option value="frecuente">Frecuente</option>
+                      <option value="nuevo">Nuevo</option>
+                    </select>
+                  </td>
+                  <td>
+                    <button class="btn-icon" title="Ver detalles">
+                      <span class="material-symbols-outlined">visibility</span>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="client-info">
+                      <div class="client-name">Pedro López</div>
                     </div>
-                </div>
-            </section>
+                  </td>
+                  <td>pedro@email.com</td>
+                  <td>1</td>
+                  <td>10/04/2023</td>
+                  <td>€450</td>
+                  <td>
+                    <select class="classification-select new">
+                      <option value="vip">VIP</option>
+                      <option value="frecuente">Frecuente</option>
+                      <option value="nuevo" selected>Nuevo</option>
+                    </select>
+                  </td>
+                  <td>
+                    <button class="btn-icon" title="Ver detalles">
+                      <span class="material-symbols-outlined">visibility</span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-            <!-- Historial -->
-            <section id="historial" class="content-section">
-                <div class="section-header">
-                    <h2>Historial de Clientes</h2>
-                </div>
-
-                <div class="content-card">
-                    <div class="form-group">
-                        <label for="cliente-historial">Seleccionar cliente</label>
-                        <select id="cliente-historial">
-                            <option value="">Seleccionar cliente...</option>
-                            <!-- Opciones cargadas dinámicamente -->
-                        </select>
-                    </div>
-
-                    <div id="historial-cliente" class="hidden">
-                        <div class="info-card">
-                            <h3>Información del Cliente</h3>
-                            <div class="info-grid">
-                                <div class="info-item">
-                                    <div class="info-label">Nombre</div>
-                                    <div class="info-value" id="historial-nombre"></div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Documento</div>
-                                    <div class="info-value" id="historial-documento"></div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Email</div>
-                                    <div class="info-value" id="historial-email"></div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Teléfono</div>
-                                    <div class="info-value" id="historial-telefono"></div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Clasificación</div>
-                                    <div class="info-value" id="historial-clasificacion"></div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Estado</div>
-                                    <div class="info-value" id="historial-estado"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <h3>Historial de Reservas</h3>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Fecha Entrada</th>
-                                        <th>Fecha Salida</th>
-                                        <th>Habitación</th>
-                                        <th>Huéspedes</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="historial-reservas">
-                                    <!-- Datos cargados dinámicamente -->
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <h3>Historial de Consumos</h3>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th>
-                                        <th>Categoría</th>
-                                        <th>Producto</th>
-                                        <th>Cantidad</th>
-                                        <th>Precio Unitario</th>
-                                        <th>Subtotal</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="historial-consumos">
-                                    <!-- Datos cargados dinámicamente -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Clasificación -->
-            <section id="clasificacion" class="content-section">
-                <div class="section-header">
-                    <h2>Clasificación de Clientes</h2>
-                </div>
-
-                <div class="content-card">
-                    <div class="form-group">
-                        <label for="cliente-clasificacion">Seleccionar cliente</label>
-                        <select id="cliente-clasificacion">
-                            <option value="">Seleccionar cliente...</option>
-                            <!-- Opciones cargadas dinámicamente -->
-                        </select>
-                    </div>
-
-                    <div id="clasificacion-cliente" class="hidden">
-                        <div class="info-card">
-                            <h3>Información del Cliente</h3>
-                            <div class="info-grid">
-                                <div class="info-item">
-                                    <div class="info-label">Nombre</div>
-                                    <div class="info-value" id="clasificacion-nombre"></div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Documento</div>
-                                    <div class="info-value" id="clasificacion-documento"></div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Email</div>
-                                    <div class="info-value" id="clasificacion-email"></div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">Teléfono</div>
-                                    <div class="info-value" id="clasificacion-telefono"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-columns">
-                            <div class="form-column">
-                                <h3>Clasificación del Cliente</h3>
-                                <div class="form-group">
-                                    <label for="tipo-clasificacion">Tipo de Cliente</label>
-                                    <select id="tipo-clasificacion">
-                                        <option value="nuevo">Nuevo</option>
-                                        <option value="frecuente">Frecuente</option>
-                                        <option value="vip">VIP</option>
-                                    </select>
-                                </div>
-                                <div class="form-actions">
-                                    <button class="btn-primary" onclick="guardarClasificacion()">
-                                        <span class="material-symbols-outlined">save</span>
-                                        Guardar Clasificación
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="form-column">
-                                <h3>Notas Especiales</h3>
-                                <div class="form-group">
-                                    <label for="notas-alergias">Alergias</label>
-                                    <textarea id="notas-alergias" placeholder="Alergias del cliente"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="notas-preferencias">Preferencias</label>
-                                    <textarea id="notas-preferencias" placeholder="Preferencias del cliente"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="notas-adicionales">Notas Adicionales</label>
-                                    <textarea id="notas-adicionales" placeholder="Otras notas importantes"></textarea>
-                                </div>
-                                <div class="form-actions">
-                                    <button class="btn-primary" onclick="guardarNotas()">
-                                        <span class="material-symbols-outlined">save</span>
-                                        Guardar Notas
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+          <div class="pagination">
+            <button class="btn-text" disabled>Anterior</button>
+            <div class="page-numbers">
+              <button class="btn-text active">1</button>
+              <button class="btn-text">2</button>
+              <button class="btn-text">3</button>
+              <span>...</span>
+              <button class="btn-text">10</button>
+            </div>
+            <button class="btn-text">Siguiente</button>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Modales -->
-    <!-- Modal Nuevo Cliente -->
-    <div id="nuevo-cliente-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Nuevo Cliente</h3>
-                <span class="close" onclick="closeModal('nuevo-cliente-modal')">&times;</span>
+  <!-- Modal para detalles de cliente -->
+  <div id="clienteDetallesModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Detalles del Cliente</h3>
+        <span class="close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="client-profile">
+          <div class="profile-header">
+            <div class="profile-avatar">CR</div>
+            <div class="profile-info">
+              <h3>Carlos Rodríguez</h3>
+              <div class="profile-details">
+                <span class="client-type vip">VIP</span>
+                <span>DNI: 28456789</span>
+                <span>carlos@email.com</span>
+                <span>+34 612 345 678</span>
+              </div>
             </div>
-            <div class="modal-body">
-                <form id="nuevo-cliente-form">
-                    <div class="form-columns">
-                        <div class="form-column">
-                            <h3>Información Personal</h3>
-                            <div class="form-group">
-                                <label for="cliente-nombre">Nombre Completo *</label>
-                                <input type="text" id="cliente-nombre" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="cliente-tipo-documento">Tipo de Documento *</label>
-                                <select id="cliente-tipo-documento" required>
-                                    <option value="dni">DNI</option>
-                                    <option value="pasaporte">Pasaporte</option>
-                                    <option value="otro">Otro</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="cliente-documento">Número de Documento *</label>
-                                <input type="text" id="cliente-documento" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="cliente-nacionalidad">Nacionalidad</label>
-                                <input type="text" id="cliente-nacionalidad">
-                            </div>
-                        </div>
-                        <div class="form-column">
-                            <h3>Información de Contacto</h3>
-                            <div class="form-group">
-                                <label for="cliente-email">Email *</label>
-                                <input type="email" id="cliente-email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="cliente-telefono">Teléfono *</label>
-                                <input type="tel" id="cliente-telefono" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="cliente-direccion">Dirección</label>
-                                <input type="text" id="cliente-direccion">
-                            </div>
-                            <div class="form-group">
-                                <label for="cliente-ciudad">Ciudad</label>
-                                <input type="text" id="cliente-ciudad">
-                            </div>
-                            <div class="form-group">
-                                <label for="cliente-pais">País</label>
-                                <input type="text" id="cliente-pais">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn-secondary" onclick="closeModal('nuevo-cliente-modal')">Cancelar</button>
-                        <button type="button" class="btn-primary" onclick="guardarCliente()">Guardar Cliente</button>
-                    </div>
-                </form>
-            </div>
+          </div>
         </div>
-    </div>
 
-    <!-- Modal Check-in -->
-    <div id="check-in-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Check-in de Cliente</h3>
-                <span class="close" onclick="closeModal('check-in-modal')">&times;</span>
+        <div class="info-card">
+          <h4>Información Personal</h4>
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-label">Nombre Completo</div>
+              <div class="info-value">Carlos Rodríguez Martínez</div>
             </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="checkin-buscar">Buscar Cliente</label>
-                    <div class="search-container">
-                        <input type="text" id="checkin-buscar" placeholder="Nombre o documento">
-                        <button class="btn-primary" onclick="buscarClienteCheckin()">
-                            <span class="material-symbols-outlined">search</span>
-                            Buscar
-                        </button>
-                    </div>
-                </div>
-
-                <div id="checkin-cliente-info" class="hidden">
-                    <div class="info-card">
-                        <h3>Información del Cliente</h3>
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <div class="info-label">Nombre</div>
-                                <div class="info-value" id="checkin-nombre"></div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Documento</div>
-                                <div class="info-value" id="checkin-documento"></div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Email</div>
-                                <div class="info-value" id="checkin-email"></div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Teléfono</div>
-                                <div class="info-value" id="checkin-telefono"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <form id="checkin-form">
-                        <input type="hidden" id="checkin-cliente-id">
-                        <div class="form-columns">
-                            <div class="form-column">
-                                <h3>Información de la Reserva</h3>
-                                <div class="form-group">
-                                    <label for="checkin-habitacion-tipo">Tipo de Habitación *</label>
-                                    <select id="checkin-habitacion-tipo" required>
-                                        <option value="">Seleccionar...</option>
-                                        <option value="individual">Individual</option>
-                                        <option value="doble">Doble</option>
-                                        <option value="suite">Suite</option>
-                                        <option value="familiar">Familiar</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="checkin-habitacion-numero">Número de Habitación *</label>
-                                    <select id="checkin-habitacion-numero" required>
-                                        <option value="">Seleccionar...</option>
-                                        <!-- Opciones cargadas dinámicamente -->
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="checkin-fecha-entrada">Fecha de Entrada *</label>
-                                    <input type="date" id="checkin-fecha-entrada" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="checkin-fecha-salida">Fecha de Salida *</label>
-                                    <input type="date" id="checkin-fecha-salida" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="checkin-huespedes">Número de Huéspedes *</label>
-                                    <input type="number" id="checkin-huespedes" min="1" value="1" required>
-                                </div>
-                            </div>
-                            <div class="form-column">
-                                <h3>Información Adicional</h3>
-                                <div class="form-group">
-                                    <label for="checkin-metodo-pago">Método de Pago</label>
-                                    <select id="checkin-metodo-pago">
-                                        <option value="efectivo">Efectivo</option>
-                                        <option value="tarjeta">Tarjeta de Crédito/Débito</option>
-                                        <option value="transferencia">Transferencia Bancaria</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="checkin-observaciones">Observaciones</label>
-                                    <textarea id="checkin-observaciones" placeholder="Observaciones adicionales"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label>Servicios Adicionales</label>
-                                    <div class="checkbox-group">
-                                        <label>
-                                            <input type="checkbox" id="checkin-servicio-desayuno"> Desayuno incluido
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" id="checkin-servicio-parking"> Parking
-                                        </label>
-                                        <label>
-                                            <input type="checkbox" id="checkin-servicio-wifi"> WiFi Premium
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-actions">
-                            <button type="button" class="btn-secondary" onclick="closeModal('check-in-modal')">Cancelar</button>
-                            <button type="button" class="btn-primary" onclick="realizarCheckin()">Completar Check-in</button>
-                        </div>
-                    </form>
-                </div>
-
-                <div id="checkin-cliente-nuevo" class="hidden">
-                    <p>No se encontró el cliente. ¿Desea registrar un nuevo cliente?</p>
-                    <div class="form-actions">
-                        <button type="button" class="btn-primary" onclick="openModal('nuevo-cliente-modal'); closeModal('check-in-modal')">
-                            <span class="material-symbols-outlined">person_add</span>
-                            Registrar Nuevo Cliente
-                        </button>
-                    </div>
-                </div>
+            <div class="info-item">
+              <div class="info-label">Documento</div>
+              <div class="info-value">DNI: 28456789</div>
             </div>
+            <div class="info-item">
+              <div class="info-label">Fecha de Nacimiento</div>
+              <div class="info-value">15/06/1985</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Nacionalidad</div>
+              <div class="info-value">Española</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Email</div>
+              <div class="info-value">carlos@email.com</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Teléfono</div>
+              <div class="info-value">+34 612 345 678</div>
+            </div>
+          </div>
         </div>
-    </div>
 
-    <!-- Modal Check-out -->
-    <div id="check-out-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Check-out de Cliente</h3>
-                <span class="close" onclick="closeModal('check-out-modal')">&times;</span>
+        <div class="info-card">
+          <h4>Historial de Hospedaje</h4>
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-label">Primera Visita</div>
+              <div class="info-value">10/12/2020</div>
             </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="checkout-buscar">Buscar Cliente</label>
-                    <div class="search-container">
-                        <input type="text" id="checkout-buscar" placeholder="Nombre o documento">
-                        <button class="btn-primary" onclick="buscarClienteCheckout()">
-                            <span class="material-symbols-outlined">search</span>
-                            Buscar
-                        </button>
-                    </div>
-                </div>
-
-                <div id="checkout-cliente-info" class="hidden">
-                    <div class="info-card">
-                        <h3>Información del Cliente</h3>
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <div class="info-label">Nombre</div>
-                                <div class="info-value" id="checkout-nombre"></div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Documento</div>
-                                <div class="info-value" id="checkout-documento"></div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Habitación</div>
-                                <div class="info-value" id="checkout-habitacion"></div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Check-in</div>
-                                <div class="info-value" id="checkout-fecha-entrada"></div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Check-out Previsto</div>
-                                <div class="info-value" id="checkout-fecha-salida"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="checkout-fecha-real">Fecha de Check-out Real</label>
-                        <input type="date" id="checkout-fecha-real">
-                    </div>
-
-                    <h3>Consumos Pendientes</h3>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Categoría</th>
-                                    <th>Producto</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio Unitario</th>
-                                    <th>Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody id="checkout-consumos">
-                                <!-- Datos cargados dinámicamente -->
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="5" class="text-right"><strong>Total Consumos:</strong></td>
-                                    <td id="checkout-total-consumos">0.00</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" class="text-right"><strong>Total Hospedaje:</strong></td>
-                                    <td id="checkout-total-hospedaje">0.00</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" class="text-right"><strong>Total a Pagar:</strong></td>
-                                    <td id="checkout-total-pagar">0.00</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" class="btn-secondary" onclick="closeModal('check-out-modal')">Cancelar</button>
-                        <button type="button" class="btn-primary" onclick="realizarCheckout()">Completar Check-out</button>
-                    </div>
-                </div>
+            <div class="info-item">
+              <div class="info-label">Última Visita</div>
+              <div class="info-value">Actualmente</div>
             </div>
+            <div class="info-item">
+              <div class="info-label">Total Visitas</div>
+              <div class="info-value">12</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Noches Totales</div>
+              <div class="info-value">45</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Habitación Preferida</div>
+              <div class="info-value">Suite</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Gasto Total</div>
+              <div class="info-value">€8,750</div>
+            </div>
+          </div>
         </div>
-    </div>
 
-    <!-- Modal Ver Cliente -->
-    <div id="ver-cliente-modal" class="modal">
-        <div class="modal-content modal-large">
-            <div class="modal-header">
-                <h3>Información del Cliente</h3>
-                <span class="close" onclick="closeModal('ver-cliente-modal')">&times;</span>
+        <div class="info-card">
+          <h4>Notas Especiales</h4>
+          <div class="special-notes">
+            <div class="note-card">
+              <div class="note-header">
+                <h4>Preferencias de Habitación</h4>
+                <span class="note-date">Actualizado: 15/04/2023</span>
+              </div>
+              <div class="note-content">
+                <p>Prefiere habitaciones en pisos altos con vista a la ciudad. Solicita almohadas extra firmes y agua mineral sin gas en la habitación.</p>
+              </div>
             </div>
-            <div class="modal-body">
-                <div class="info-card">
-                    <h3>Datos Personales</h3>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="info-label">Nombre</div>
-                            <div class="info-value" id="ver-nombre"></div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Documento</div>
-                            <div class="info-value" id="ver-documento"></div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Nacionalidad</div>
-                            <div class="info-value" id="ver-nacionalidad"></div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Email</div>
-                            <div class="info-value" id="ver-email"></div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Teléfono</div>
-                            <div class="info-value" id="ver-telefono"></div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Dirección</div>
-                            <div class="info-value" id="ver-direccion"></div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Ciudad</div>
-                            <div class="info-value" id="ver-ciudad"></div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">País</div>
-                            <div class="info-value" id="ver-pais"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="info-card">
-                    <h3>Clasificación y Notas</h3>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="info-label">Clasificación</div>
-                            <div class="info-value" id="ver-clasificacion"></div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Estado</div>
-                            <div class="info-value" id="ver-estado"></div>
-                        </div>
-                    </div>
-                    <h4>Alergias</h4>
-                    <p id="ver-alergias"></p>
-                    <h4>Preferencias</h4>
-                    <p id="ver-preferencias"></p>
-                    <h4>Notas Adicionales</h4>
-                    <p id="ver-notas-adicionales"></p>
-                </div>
-
-                <div class="tabs">
-                    <div class="tab-header">
-                        <div class="tab-item active" data-tab="reservas">Reservas</div>
-                        <div class="tab-item" data-tab="consumos">Consumos</div>
-                        <div class="tab-item" data-tab="historial">Historial de Visitas</div>
-                    </div>
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="tab-reservas">
-                            <div class="table-container">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Fecha Entrada</th>
-                                            <th>Fecha Salida</th>
-                                            <th>Habitación</th>
-                                            <th>Huéspedes</th>
-                                            <th>Estado</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="ver-reservas">
-                                        <!-- Datos cargados dinámicamente -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tab-consumos">
-                            <div class="table-container">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Fecha</th>
-                                            <th>Categoría</th>
-                                            <th>Producto</th>
-                                            <th>Cantidad</th>
-                                            <th>Precio Unitario</th>
-                                            <th>Subtotal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="ver-consumos">
-                                        <!-- Datos cargados dinámicamente -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tab-historial">
-                            <div class="table-container">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Fecha Check-in</th>
-                                            <th>Fecha Check-out</th>
-                                            <th>Habitación</th>
-                                            <th>Noches</th>
-                                            <th>Total Pagado</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="ver-historial">
-                                        <!-- Datos cargados dinámicamente -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="note-card">
+              <div class="note-header">
+                <h4>Alergias Alimentarias</h4>
+                <span class="note-date">Actualizado: 02/03/2023</span>
+              </div>
+              <div class="note-content">
+                <p>Alergia a los frutos secos y mariscos. Informar siempre al restaurante antes de servir cualquier comida.</p>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
 
-    <!-- Scripts -->
-    <script src="components/ui/chart.js"></script>
-    <script src="clientes.js"></script>
+        <div class="form-actions">
+          <button class="btn-secondary">
+            <span class="material-symbols-outlined">history</span>
+            Ver Historial Completo
+          </button>
+          <button class="btn-primary">
+            <span class="material-symbols-outlined">edit</span>
+            Editar Información
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="clientes.js"></script>
 </body>
 </html>
