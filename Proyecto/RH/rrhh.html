@@ -12,7 +12,7 @@
         <!-- Sidebar / Menú lateral -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h1>Hotel Manager</h1>
+                <h1>Hotel</h1>
                 <div class="module-badge">Recursos Humanos</div>
             </div>
             <div class="sidebar-user">
@@ -40,10 +40,6 @@
                         <span class="material-symbols-outlined">payments</span>
                         <span>Nómina</span>
                     </li>
-                    <li class="nav-item" data-section="reportes">
-                        <span class="material-symbols-outlined">summarize</span>
-                        <span>Reportes</span>
-                    </li>
                 </ul>
             </nav>
             <div class="sidebar-footer">
@@ -66,7 +62,7 @@
                     <span>Cerrar Sesión</span>
                 </button>
                 <p id="current-date"></p>
-                <p>&copy; 2023 Hotel Manager</p>
+                <p>&copy; 2025 Hotel Manager</p>
             </div>
         </aside>
 
@@ -460,124 +456,6 @@
                     </div>
                 </div>
             </section>
-
-            <!-- Sección Reportes -->
-            <section id="reportes" class="content-section">
-                <div class="section-header">
-                    <h2>Reportes de Recursos Humanos</h2>
-                </div>
-                
-                <div class="content-card">
-                    <div class="card-header">
-                        <h3>Generar Reporte</h3>
-                    </div>
-                    <div class="report-generator">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="reporte-tipo">Tipo de Reporte:</label>
-                                <select id="reporte-tipo" required>
-                                    <option value="plantilla">Plantilla de Personal</option>
-                                    <option value="asistencia">Asistencia</option>
-                                    <option value="rotacion">Rotación de Personal</option>
-                                    <option value="costos">Costos de Personal</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="reporte-periodo">Periodo:</label>
-                                <select id="reporte-periodo" required>
-                                    <option value="mensual" selected>Mensual</option>
-                                    <option value="trimestral">Trimestral</option>
-                                    <option value="anual">Anual</option>
-                                    <option value="personalizado">Personalizado</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div id="periodo-personalizado" class="form-row hidden">
-                            <div class="form-group">
-                                <label for="reporte-fecha-inicio">Fecha Inicio:</label>
-                                <input type="date" id="reporte-fecha-inicio">
-                            </div>
-                            <div class="form-group">
-                                <label for="reporte-fecha-fin">Fecha Fin:</label>
-                                <input type="date" id="reporte-fecha-fin">
-                            </div>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button type="button" class="btn-primary" onclick="generarReporte()">
-                                <span class="material-symbols-outlined">description</span> Generar Reporte
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="content-card hidden" id="reporte-generado">
-                    <div class="card-header">
-                        <h3 id="reporte-titulo">Reporte</h3>
-                        <div class="export-actions">
-                            <button type="button" class="btn-secondary" onclick="imprimirReporte()">
-                                <span class="material-symbols-outlined">print</span> Imprimir
-                            </button>
-                            <button type="button" class="btn-secondary" onclick="exportarReporteExcel()">
-                                <span class="material-symbols-outlined">download</span> Excel
-                            </button>
-                            <button type="button" class="btn-secondary" onclick="exportarReportePDF()">
-                                <span class="material-symbols-outlined">picture_as_pdf</span> PDF
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div id="reporte-contenido">
-                        <!-- El contenido del reporte se generará dinámicamente -->
-                    </div>
-                </div>
-                
-                <div class="reports-grid">
-                    <div class="report-card" onclick="generarReporteRapido('plantilla')">
-                        <div class="report-icon">
-                            <span class="material-symbols-outlined">group</span>
-                        </div>
-                        <div class="report-info">
-                            <h3>Plantilla de Personal</h3>
-                            <p>Distribución de empleados por departamento</p>
-                        </div>
-                    </div>
-                    
-                    <div class="report-card" onclick="generarReporteRapido('asistencia')">
-                        <div class="report-icon">
-                            <span class="material-symbols-outlined">fact_check</span>
-                        </div>
-                        <div class="report-info">
-                            <h3>Asistencia</h3>
-                            <p>Análisis de asistencia y puntualidad</p>
-                        </div>
-                    </div>
-                    
-                    <div class="report-card" onclick="generarReporteRapido('rotacion')">
-                        <div class="report-icon">
-                            <span class="material-symbols-outlined">sync_alt</span>
-                        </div>
-                        <div class="report-info">
-                            <h3>Rotación de Personal</h3>
-                            <p>Altas y bajas de personal en el periodo</p>
-                        </div>
-                    </div>
-                    
-                    <div class="report-card" onclick="generarReporteRapido('costos')">
-                        <div class="report-icon">
-                            <span class="material-symbols-outlined">payments</span>
-                        </div>
-                        <div class="report-info">
-                            <h3>Costos de Personal</h3>
-                            <p>Análisis de costos por departamento</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-
     <!-- Modales -->
     <div id="modal-empleado" class="modal">
         <div class="modal-content modal-large">
@@ -968,7 +846,6 @@
     </div>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="rrhh.js"></script>
 </body>
 </html>

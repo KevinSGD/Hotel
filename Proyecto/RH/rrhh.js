@@ -98,7 +98,6 @@ function renderizarEmpleados() {
         <button onclick="abrirModalAsistencia('${e.id}')">🕒</button>
         <button onclick="editarEmpleado('${e.id}')">✏️</button>
         <button onclick="eliminarEmpleado('${e.id}')">🗑️</button>
-        <button onclick="verHistorialEmpleado('${e.id}')">📄</button>
       </td>
     `
     tbody.appendChild(row)
