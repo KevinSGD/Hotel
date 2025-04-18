@@ -1,4 +1,25 @@
+// Asumiendo que este es el archivo principal que necesita modificación
 
+// Importar Chart.js si no está ya incluido en el HTML
+// <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+// Variables globales para los gráficos
+let departamentosCanvas
+let asistenciaCanvas
+let departamentosCtx
+let asistenciaCtx
+let departamentosData = []
+let departamentosLabels = []
+const asistenciaData = {
+  labels: [],
+  datasets: [
+    { label: "Asistencias", color: "#4CAF50", data: [] },
+    { label: "Faltas", color: "#F44336", data: [] },
+    { label: "Retardos", color: "#FFC107", data: [] },
+  ],
+}
+
+// Datos de ejemplo para empleados
 const empleados = [
   {
     id: 1,
@@ -176,65 +197,6 @@ const asistencias = [
   },
 ]
 
-// Datos de ejemplo para nómina
-const nominas = [
-  {
-    id: 1,
-    fecha: "2023-10-30",
-    empleadoId: 1,
-    periodo: "Octubre 2023",
-    percepciones: 12000,
-    deducciones: 500,
-    pagoNeto: 11500,
-    estado: "completado",
-    observaciones: "",
-  },
-  {
-    id: 2,
-    fecha: "2023-10-30",
-    empleadoId: 2,
-    periodo: "Octubre 2023",
-    percepciones: 15000,
-    deducciones: 0,
-    pagoNeto: 15000,
-    estado: "completado",
-    observaciones: "",
-  },
-  {
-    id: 3,
-    fecha: "2023-10-30",
-    empleadoId: 3,
-    periodo: "Octubre 2023",
-    percepciones: 18000,
-    deducciones: 1000,
-    pagoNeto: 17000,
-    estado: "completado",
-    observaciones: "Descuento por 2 retardos",
-  },
-  {
-    id: 4,
-    fecha: "2023-10-30",
-    empleadoId: 4,
-    periodo: "Octubre 2023",
-    percepciones: 20000,
-    deducciones: 0,
-    pagoNeto: 20000,
-    estado: "completado",
-    observaciones: "",
-  },
-  {
-    id: 5,
-    fecha: "2023-10-30",
-    empleadoId: 5,
-    periodo: "Octubre 2023",
-    percepciones: 14000,
-    deducciones: 700,
-    pagoNeto: 13300,
-    estado: "completado",
-    observaciones: "Descuento por 1 falta",
-  },
-]
-
 // Inicialización
 document.addEventListener("DOMContentLoaded", () => {
   // Mostrar fecha actual
@@ -290,6 +252,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     })
   }
+
+  // Inicializar el botón de agregar empleado
+  inicializarBotonAgregarEmpleado()
 })
 
 // Navegación
@@ -371,124 +336,303 @@ function cargarDashboard() {
   actualizarGraficos()
 }
 
-function cargarEmpleadosRecientes() {
-  const tablaBody = document.getElementById("recent-employees-table")
-  tablaBody.innerHTML = ""
-
-  // Ordenar empleados por fecha de ingreso (más recientes primero)
-  const empleadosRecientes = [...empleados].sort((a, b) => new Date(b.ingreso) - new Date(a.ingreso)).slice(0, 5)
-
-  empleadosRecientes.forEach((empleado) => {
-    const tr = document.createElement("tr")
-    tr.innerHTML = `
-      <td>${empleado.nombre}</td>
-      <td>${formatDepartamento(empleado.departamento)}</td>
-      <td>${empleado.puesto}</td>
-      <td>${formatDate(empleado.ingreso)}</td>
-      <td><span class="status-badge ${empleado.estado}">${formatEstado(empleado.estado)}</span></td>
-    `
-
-    tablaBody.appendChild(tr)
-  })
-}
-
-function cargarProximosPagos() {
-  const tablaBody = document.getElementById("upcoming-payments-table")
-  tablaBody.innerHTML = ""
-
-  // Simular próximos pagos (fin de mes actual)
-  const fechaActual = new Date()
-  const ultimoDiaMes = new Date(fechaActual.getFullYear(), fechaActual.getMonth() + 1, 0)
-  const proximoPago = ultimoDiaMes.toISOString().split("T")[0]
-
-  // Mostrar solo empleados activos
-  const empleadosActivos = empleados.filter((e) => e.estado === "activo").slice(0, 5)
-
-  empleadosActivos.forEach((empleado) => {
-    const tr = document.createElement("tr")
-    tr.innerHTML = `
-      <td>${empleado.nombre}</td>
-      <td>${formatDate(proximoPago)}</td>
-      <td>${formatCurrency(empleado.salario)}</td>
-      <td><span class="status-badge pendiente">Pendiente</span></td>
-    `
-
-    tablaBody.appendChild(tr)
-  })
-}
-
-// Gráficos
+// Gráficos - IMPLEMENTACIÓN SIN LIBRERÍAS
 function inicializarGraficos() {
-  // Crear gráficos vacíos que se actualizarán después
-  const ctxDepartamentos = document.getElementById("departamentos-chart").getContext("2d")
-  const ctxAsistencia = document.getElementById("asistencia-chart").getContext("2d")
+  // Obtener los elementos canvas
+  departamentosCanvas = document.getElementById("departamentos-chart")
+  asistenciaCanvas = document.getElementById("asistencia-chart")
 
-  // Gráfico de distribución por departamento
-  window.departamentosChart = new Chart(ctxDepartamentos, {
-    type: "pie",
-    data: {
-      labels: [],
-      datasets: [
-        {
-          data: [],
-          backgroundColor: ["#4CAF50", "#2196F3", "#FFC107", "#9C27B0", "#FF5722", "#607D8B"],
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: "right",
-        },
-      },
-    },
+  if (!departamentosCanvas || !asistenciaCanvas) {
+    console.error("No se encontraron los elementos canvas para los gráficos.")
+    return
+  }
+
+  // Obtener contextos 2D
+  departamentosCtx = departamentosCanvas.getContext("2d")
+  asistenciaCtx = asistenciaCanvas.getContext("2d")
+
+  if (!departamentosCtx || !asistenciaCtx) {
+    console.error("No se pudieron obtener los contextos 2D para los gráficos.")
+    return
+  }
+
+  // Configurar tamaños de canvas
+  ajustarTamanoCanvas()
+
+  // Agregar listener para redimensionar los gráficos cuando cambie el tamaño de la ventana
+  window.addEventListener("resize", () => {
+    ajustarTamanoCanvas()
+    actualizarGraficos()
   })
 
-  // Gráfico de asistencia mensual
-  window.asistenciaChart = new Chart(ctxAsistencia, {
-    type: "bar",
-    data: {
-      labels: [],
-      datasets: [
-        {
-          label: "Asistencias",
-          backgroundColor: "#4CAF50",
-          data: [],
-        },
-        {
-          label: "Faltas",
-          backgroundColor: "#F44336",
-          data: [],
-        },
-        {
-          label: "Retardos",
-          backgroundColor: "#FFC107",
-          data: [],
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            precision: 0,
-          },
-        },
-      },
-    },
+  // Inicializar eventos para interactividad
+  inicializarEventosGraficos()
+
+  // Actualizar los gráficos con datos iniciales
+  actualizarGraficos()
+}
+
+function ajustarTamanoCanvas() {
+  // Ajustar tamaño del canvas de departamentos
+  const departamentosContainer = departamentosCanvas.parentElement
+  departamentosCanvas.width = departamentosContainer.clientWidth
+  departamentosCanvas.height = departamentosContainer.clientHeight
+
+  // Ajustar tamaño del canvas de asistencia
+  const asistenciaContainer = asistenciaCanvas.parentElement
+  asistenciaCanvas.width = asistenciaContainer.clientWidth
+  asistenciaCanvas.height = asistenciaContainer.clientHeight
+}
+
+function inicializarEventosGraficos() {
+  // Evento para mostrar tooltips en el gráfico de departamentos
+  departamentosCanvas.addEventListener("mousemove", (event) => {
+    const rect = departamentosCanvas.getBoundingClientRect()
+    const x = event.clientX - rect.left
+    const y = event.clientY - rect.top
+
+    // Verificar si el mouse está sobre alguna porción del gráfico
+    const sector = obtenerSectorPieChart(x, y)
+
+    if (sector !== -1) {
+      // Mostrar tooltip
+      mostrarTooltipDepartamento(event.clientX, event.clientY, sector)
+    } else {
+      // Ocultar tooltip
+      ocultarTooltipDepartamento()
+    }
   })
+
+  // Evento para ocultar tooltip al salir del canvas
+  departamentosCanvas.addEventListener("mouseout", () => {
+    ocultarTooltipDepartamento()
+  })
+
+  // Evento para mostrar tooltips en el gráfico de asistencia
+  asistenciaCanvas.addEventListener("mousemove", (event) => {
+    const rect = asistenciaCanvas.getBoundingClientRect()
+    const x = event.clientX - rect.left
+    const y = event.clientY - rect.top
+
+    // Verificar si el mouse está sobre alguna barra del gráfico
+    const barra = obtenerBarraGrafico(x, y)
+
+    if (barra.encontrada) {
+      // Mostrar tooltip
+      mostrarTooltipAsistencia(event.clientX, event.clientY, barra.dataset, barra.index)
+    } else {
+      // Ocultar tooltip
+      ocultarTooltipAsistencia()
+    }
+  })
+
+  // Evento para ocultar tooltip al salir del canvas
+  asistenciaCanvas.addEventListener("mouseout", () => {
+    ocultarTooltipAsistencia()
+  })
+}
+
+// Variables para tooltips
+let tooltipDepartamento = null
+let tooltipAsistencia = null
+
+function mostrarTooltipDepartamento(x, y, sectorIndex) {
+  // Crear tooltip si no existe
+  if (!tooltipDepartamento) {
+    tooltipDepartamento = document.createElement("div")
+    tooltipDepartamento.className = "grafico-tooltip"
+    tooltipDepartamento.style.position = "absolute"
+    tooltipDepartamento.style.backgroundColor = "rgba(0, 0, 0, 0.8)"
+    tooltipDepartamento.style.color = "white"
+    tooltipDepartamento.style.padding = "5px 10px"
+    tooltipDepartamento.style.borderRadius = "4px"
+    tooltipDepartamento.style.fontSize = "12px"
+    tooltipDepartamento.style.pointerEvents = "none"
+    tooltipDepartamento.style.zIndex = "1000"
+    document.body.appendChild(tooltipDepartamento)
+  }
+
+  // Calcular el porcentaje
+  const total = departamentosData.reduce((a, b) => a + b, 0)
+  const porcentaje = Math.round((departamentosData[sectorIndex] / total) * 100)
+
+  // Actualizar contenido y posición
+  tooltipDepartamento.textContent = `${departamentosLabels[sectorIndex]}: ${departamentosData[sectorIndex]} (${porcentaje}%)`
+  tooltipDepartamento.style.left = `${x + 10}px`
+  tooltipDepartamento.style.top = `${y + 10}px`
+  tooltipDepartamento.style.display = "block"
+}
+
+function ocultarTooltipDepartamento() {
+  if (tooltipDepartamento) {
+    tooltipDepartamento.style.display = "none"
+  }
+}
+
+function mostrarTooltipAsistencia(x, y, datasetIndex, dataIndex) {
+  // Crear tooltip si no existe
+  if (!tooltipAsistencia) {
+    tooltipAsistencia = document.createElement("div")
+    tooltipAsistencia.className = "grafico-tooltip"
+    tooltipAsistencia.style.position = "absolute"
+    tooltipAsistencia.style.backgroundColor = "rgba(0, 0, 0, 0.8)"
+    tooltipAsistencia.style.color = "white"
+    tooltipAsistencia.style.padding = "5px 10px"
+    tooltipAsistencia.style.borderRadius = "4px"
+    tooltipAsistencia.style.fontSize = "12px"
+    tooltipAsistencia.style.pointerEvents = "none"
+    tooltipAsistencia.style.zIndex = "1000"
+    document.body.appendChild(tooltipAsistencia)
+  }
+
+  // Actualizar contenido y posición
+  const dataset = asistenciaData.datasets[datasetIndex]
+  const label = dataset.label
+  const value = dataset.data[dataIndex]
+  const fecha = asistenciaData.labels[dataIndex]
+
+  tooltipAsistencia.textContent = `${fecha} - ${label}: ${value}`
+  tooltipAsistencia.style.left = `${x + 10}px`
+  tooltipAsistencia.style.top = `${y + 10}px`
+  tooltipAsistencia.style.display = "block"
+}
+
+function ocultarTooltipAsistencia() {
+  if (tooltipAsistencia) {
+    tooltipAsistencia.style.display = "none"
+  }
+}
+
+function obtenerSectorPieChart(x, y) {
+  // Calcular el centro del gráfico
+  const centerX = departamentosCanvas.width / 2
+  const centerY = departamentosCanvas.height / 2
+
+  // Calcular la distancia desde el centro
+  const dx = x - centerX
+  const dy = y - centerY
+  const distance = Math.sqrt(dx * dx + dy * dy)
+
+  // Radio del gráfico (80% del menor entre ancho y alto)
+  const radius = Math.min(departamentosCanvas.width, departamentosCanvas.height) * 0.4
+
+  // Si está fuera del radio, no está sobre ningún sector
+  if (distance > radius) {
+    return -1
+  }
+
+  // Calcular el ángulo en radianes
+  let angle = Math.atan2(dy, dx)
+  if (angle < 0) {
+    angle += 2 * Math.PI
+  }
+
+  // Calcular el sector correspondiente al ángulo
+  const total = departamentosData.reduce((a, b) => a + b, 0)
+  let acumulado = 0
+
+  for (let i = 0; i < departamentosData.length; i++) {
+    const porcentaje = departamentosData[i] / total
+    const sectorAngle = porcentaje * 2 * Math.PI
+
+    acumulado += sectorAngle
+
+    if (angle <= acumulado) {
+      return i
+    }
+  }
+
+  return -1
+}
+
+function obtenerBarraGrafico(x, y) {
+  // Calcular dimensiones del área de gráfico
+  const chartArea = {
+    left: asistenciaCanvas.width * 0.1,
+    right: asistenciaCanvas.width * 0.9,
+    top: asistenciaCanvas.height * 0.1,
+    bottom: asistenciaCanvas.height * 0.8,
+  }
+
+  // Ancho del área de gráfico
+  const chartWidth = chartArea.right - chartArea.left
+  const chartHeight = chartArea.bottom - chartArea.top
+
+  // Si está fuera del área del gráfico
+  if (x < chartArea.left || x > chartArea.right || y < chartArea.top || y > chartArea.bottom) {
+    return { encontrada: false }
+  }
+
+  // Número de grupos (fechas)
+  const numGroups = asistenciaData.labels.length
+
+  // Ancho de cada grupo
+  const groupWidth = chartWidth / numGroups
+
+  // Determinar el grupo (índice de fecha)
+  const groupIndex = Math.floor((x - chartArea.left) / groupWidth)
+
+  // Si el índice está fuera de rango
+  if (groupIndex < 0 || groupIndex >= numGroups) {
+    return { encontrada: false }
+  }
+
+  // Encontrar el valor máximo para escalar
+  const maxValue = Math.max(...asistenciaData.datasets.map((dataset) => Math.max(...dataset.data)))
+
+  // Ancho de cada barra dentro del grupo
+  const numDatasets = asistenciaData.datasets.length
+  const barWidth = groupWidth / (numDatasets + 1) // +1 para espacio entre grupos
+
+  // Verificar cada dataset (tipo de asistencia)
+  for (let i = 0; i < numDatasets; i++) {
+    const dataset = asistenciaData.datasets[i]
+    const value = dataset.data[groupIndex]
+
+    // Calcular altura de la barra
+    const barHeight = (value / maxValue) * chartHeight
+
+    // Calcular posición X de la barra
+    const barX = chartArea.left + groupIndex * groupWidth + (i + 0.5) * barWidth
+
+    // Calcular posición Y de la barra (desde abajo)
+    const barY = chartArea.bottom - barHeight
+
+    // Verificar si el punto está dentro de la barra
+    if (x >= barX && x <= barX + barWidth && y >= barY && y <= chartArea.bottom) {
+      return {
+        encontrada: true,
+        dataset: i,
+        index: groupIndex,
+      }
+    }
+  }
+
+  return { encontrada: false }
 }
 
 function actualizarGraficos() {
-  // Actualizar gráfico de distribución por departamento
+  // Verificar si los contextos están inicializados
+  if (!departamentosCtx || !asistenciaCtx) {
+    console.error("Los contextos de los gráficos no están inicializados.")
+    return
+  }
+
+  // Actualizar datos para el gráfico de departamentos
+  actualizarDatosDepartamentos()
+
+  // Actualizar datos para el gráfico de asistencia
+  actualizarDatosAsistencia()
+
+  // Dibujar los gráficos
+  dibujarGraficoDepartamentos()
+  dibujarGraficoAsistencia()
+}
+
+function actualizarDatosDepartamentos() {
+  // Contar empleados por departamento
   const departamentos = {}
 
-  // Contar empleados por departamento
   empleados.forEach((empleado) => {
     if (empleado.estado === "activo") {
       if (!departamentos[empleado.departamento]) {
@@ -499,15 +643,11 @@ function actualizarGraficos() {
   })
 
   // Preparar datos para el gráfico
-  const departamentosLabels = Object.keys(departamentos).map((dep) => formatDepartamento(dep))
-  const departamentosData = Object.values(departamentos)
+  departamentosLabels = Object.keys(departamentos).map((dep) => formatDepartamento(dep))
+  departamentosData = Object.values(departamentos)
+}
 
-  // Actualizar gráfico de departamentos
-  window.departamentosChart.data.labels = departamentosLabels
-  window.departamentosChart.data.datasets[0].data = departamentosData
-  window.departamentosChart.update()
-
-  // Actualizar gráfico de asistencia mensual
+function actualizarDatosAsistencia() {
   // Obtener los últimos 7 días
   const fechas = []
   const asistenciasData = []
@@ -538,12 +678,253 @@ function actualizarGraficos() {
     return `${fecha.getDate()}/${fecha.getMonth() + 1}`
   })
 
-  // Actualizar gráfico de asistencia
-  window.asistenciaChart.data.labels = fechasFormateadas
-  window.asistenciaChart.data.datasets[0].data = asistenciasData
-  window.asistenciaChart.data.datasets[1].data = faltasData
-  window.asistenciaChart.data.datasets[2].data = retardosData
-  window.asistenciaChart.update()
+  // Actualizar datos del gráfico de asistencia
+  asistenciaData.labels = fechasFormateadas
+  asistenciaData.datasets[0].data = asistenciasData
+  asistenciaData.datasets[1].data = faltasData
+  asistenciaData.datasets[2].data = retardosData
+}
+
+function dibujarGraficoDepartamentos() {
+  // Limpiar el canvas
+  departamentosCtx.clearRect(0, 0, departamentosCanvas.width, departamentosCanvas.height)
+
+  // Si no hay datos, mostrar mensaje
+  if (departamentosData.length === 0) {
+    mostrarMensajeNoData(departamentosCtx, departamentosCanvas.width, departamentosCanvas.height)
+    return
+  }
+
+  // Colores para las secciones del gráfico
+  const colors = ["#4CAF50", "#2196F3", "#FFC107", "#9C27B0", "#FF5722", "#607D8B"]
+
+  // Calcular el total
+  const total = departamentosData.reduce((a, b) => a + b, 0)
+
+  // Calcular el centro y radio del gráfico
+  const centerX = departamentosCanvas.width / 2
+  const centerY = departamentosCanvas.height / 2
+  const radius = Math.min(departamentosCanvas.width, departamentosCanvas.height) * 0.4
+
+  // Dibujar el gráfico circular
+  let startAngle = 0
+
+  for (let i = 0; i < departamentosData.length; i++) {
+    const value = departamentosData[i]
+    const sliceAngle = (value / total) * 2 * Math.PI
+
+    // Dibujar sector
+    departamentosCtx.beginPath()
+    departamentosCtx.moveTo(centerX, centerY)
+    departamentosCtx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle)
+    departamentosCtx.closePath()
+
+    // Aplicar color
+    departamentosCtx.fillStyle = colors[i % colors.length]
+    departamentosCtx.fill()
+
+    // Dibujar borde
+    departamentosCtx.strokeStyle = "#fff"
+    departamentosCtx.lineWidth = 2
+    departamentosCtx.stroke()
+
+    startAngle += sliceAngle
+  }
+
+  // Dibujar leyenda
+  dibujarLeyendaDepartamentos(colors)
+}
+
+function dibujarLeyendaDepartamentos(colors) {
+  const legendX = departamentosCanvas.width * 0.7
+  const legendY = departamentosCanvas.height * 0.2
+  const itemHeight = 20
+  const boxSize = 15
+
+  for (let i = 0; i < departamentosLabels.length; i++) {
+    const y = legendY + i * itemHeight
+
+    // Dibujar cuadro de color
+    departamentosCtx.fillStyle = colors[i % colors.length]
+    departamentosCtx.fillRect(legendX, y, boxSize, boxSize)
+
+    // Dibujar borde
+    departamentosCtx.strokeStyle = "#fff"
+    departamentosCtx.lineWidth = 1
+    departamentosCtx.strokeRect(legendX, y, boxSize, boxSize) // Dibujar texto
+    departamentosCtx.fillStyle = "#333"
+    departamentosCtx.font = "12px Arial"
+    departamentosCtx.textAlign = "left"
+    departamentosCtx.textBaseline = "middle"
+    departamentosCtx.fillText(departamentosLabels[i], legendX + boxSize + 5, y + boxSize / 2)
+  }
+}
+
+function dibujarGraficoAsistencia() {
+  // Limpiar el canvas
+  asistenciaCtx.clearRect(0, 0, asistenciaCanvas.width, asistenciaCanvas.height)
+
+  // Si no hay datos, mostrar mensaje
+  if (asistenciaData.labels.length === 0) {
+    mostrarMensajeNoData(asistenciaCtx, asistenciaCanvas.width, asistenciaCanvas.height)
+    return
+  }
+
+  // Calcular dimensiones del área de gráfico
+  const chartArea = {
+    left: asistenciaCanvas.width * 0.1,
+    right: asistenciaCanvas.width * 0.9,
+    top: asistenciaCanvas.height * 0.1,
+    bottom: asistenciaCanvas.height * 0.8,
+  }
+
+  // Ancho del área de gráfico
+  const chartWidth = chartArea.right - chartArea.left
+  const chartHeight = chartArea.bottom - chartArea.top
+
+  // Número de grupos (fechas)
+  const numGroups = asistenciaData.labels.length
+
+  // Ancho de cada grupo
+  const groupWidth = chartWidth / numGroups
+
+  // Encontrar el valor máximo para escalar
+  const maxValue = Math.max(
+    ...asistenciaData.datasets.map(
+      (dataset) => Math.max(...dataset.data, 1), // Mínimo 1 para evitar división por cero
+    ),
+  )
+
+  // Dibujar ejes
+  dibujarEjesAsistencia(chartArea, maxValue)
+
+  // Dibujar barras
+  for (let groupIndex = 0; groupIndex < numGroups; groupIndex++) {
+    const numDatasets = asistenciaData.datasets.length
+    const barWidth = groupWidth / (numDatasets + 1) // +1 para espacio entre grupos
+
+    for (let datasetIndex = 0; datasetIndex < numDatasets; datasetIndex++) {
+      const dataset = asistenciaData.datasets[datasetIndex]
+      const value = dataset.data[groupIndex]
+
+      // Calcular altura de la barra
+      const barHeight = (value / maxValue) * chartHeight
+
+      // Calcular posición X de la barra
+      const barX = chartArea.left + groupIndex * groupWidth + (datasetIndex + 0.5) * barWidth
+
+      // Calcular posición Y de la barra (desde abajo)
+      const barY = chartArea.bottom - barHeight
+
+      // Dibujar barra
+      asistenciaCtx.fillStyle = dataset.color
+      asistenciaCtx.fillRect(barX, barY, barWidth, barHeight)
+
+      // Dibujar borde
+      asistenciaCtx.strokeStyle = "#fff"
+      asistenciaCtx.lineWidth = 1
+      asistenciaCtx.strokeRect(barX, barY, barWidth, barHeight)
+
+      // Dibujar valor encima de la barra si es mayor que cero
+      if (value > 0) {
+        asistenciaCtx.fillStyle = "#333"
+        asistenciaCtx.font = "10px Arial"
+        asistenciaCtx.textAlign = "center"
+        asistenciaCtx.textBaseline = "bottom"
+        asistenciaCtx.fillText(value.toString(), barX + barWidth / 2, barY - 2)
+      }
+    }
+  }
+
+  // Dibujar leyenda
+  dibujarLeyendaAsistencia()
+}
+
+function dibujarEjesAsistencia(chartArea, maxValue) {
+  // Dibujar eje Y
+  asistenciaCtx.beginPath()
+  asistenciaCtx.moveTo(chartArea.left, chartArea.top)
+  asistenciaCtx.lineTo(chartArea.left, chartArea.bottom)
+  asistenciaCtx.strokeStyle = "#999"
+  asistenciaCtx.lineWidth = 1
+  asistenciaCtx.stroke()
+
+  // Dibujar eje X
+  asistenciaCtx.beginPath()
+  asistenciaCtx.moveTo(chartArea.left, chartArea.bottom)
+  asistenciaCtx.lineTo(chartArea.right, chartArea.bottom)
+  asistenciaCtx.strokeStyle = "#999"
+  asistenciaCtx.lineWidth = 1
+  asistenciaCtx.stroke()
+
+  // Dibujar líneas horizontales y etiquetas del eje Y
+  const numLines = 5
+  for (let i = 0; i <= numLines; i++) {
+    const y = chartArea.bottom - (i / numLines) * (chartArea.bottom - chartArea.top)
+    const value = Math.round((i / numLines) * maxValue)
+
+    // Dibujar línea
+    asistenciaCtx.beginPath()
+    asistenciaCtx.moveTo(chartArea.left, y)
+    asistenciaCtx.lineTo(chartArea.right, y)
+    asistenciaCtx.strokeStyle = "#eee"
+    asistenciaCtx.lineWidth = 1
+    asistenciaCtx.stroke()
+
+    // Dibujar etiqueta
+    asistenciaCtx.fillStyle = "#666"
+    asistenciaCtx.font = "10px Arial"
+    asistenciaCtx.textAlign = "right"
+    asistenciaCtx.textBaseline = "middle"
+    asistenciaCtx.fillText(value.toString(), chartArea.left - 5, y)
+  }
+
+  // Dibujar etiquetas del eje X
+  for (let i = 0; i < asistenciaData.labels.length; i++) {
+    const x = chartArea.left + (i + 0.5) * ((chartArea.right - chartArea.left) / asistenciaData.labels.length)
+
+    asistenciaCtx.fillStyle = "#666"
+    asistenciaCtx.font = "10px Arial"
+    asistenciaCtx.textAlign = "center"
+    asistenciaCtx.textBaseline = "top"
+    asistenciaCtx.fillText(asistenciaData.labels[i], x, chartArea.bottom + 5)
+  }
+}
+
+function dibujarLeyendaAsistencia() {
+  const legendX = asistenciaCanvas.width * 0.1
+  const legendY = asistenciaCanvas.height * 0.05
+  const itemWidth = 100
+  const boxSize = 15
+
+  for (let i = 0; i < asistenciaData.datasets.length; i++) {
+    const dataset = asistenciaData.datasets[i]
+    const x = legendX + i * itemWidth
+
+    // Dibujar cuadro de color
+    asistenciaCtx.fillStyle = dataset.color
+    asistenciaCtx.fillRect(x, legendY, boxSize, boxSize)
+
+    // Dibujar borde
+    asistenciaCtx.strokeStyle = "#fff"
+    asistenciaCtx.lineWidth = 1
+    asistenciaCtx.strokeRect(x, legendY, boxSize, boxSize)
+
+    // Dibujar texto
+    asistenciaCtx.fillStyle = "#333"
+    asistenciaCtx.font = "12px Arial"
+    asistenciaCtx.textAlign = "left"
+    asistenciaCtx.textBaseline = "middle"
+    asistenciaCtx.fillText(dataset.label, x + boxSize + 5, legendY + boxSize / 2)
+  }
+}
+
+function mostrarMensajeNoData(ctx, width, height) {
+  ctx.fillStyle = "#999"
+  ctx.font = "14px Arial"
+  ctx.textAlign = "center"
+  ctx.textBaseline = "middle"
+  ctx.fillText("No hay datos disponibles", width / 2, height / 2)
 }
 
 // Funciones para Empleados
@@ -581,1443 +962,6 @@ function cargarTablaEmpleados() {
 
     tablaBody.appendChild(tr)
   })
-}
-
-function filtrarEmpleados() {
-  const departamento = document.getElementById("filtro-departamento").value
-  const estado = document.getElementById("filtro-estado").value
-  const busqueda = document.getElementById("buscar-empleado").value.toLowerCase()
-
-  const tablaBody = document.querySelector("#tabla-empleados tbody")
-  tablaBody.innerHTML = ""
-
-  // Filtrar empleados
-  let empleadosFiltrados = [...empleados]
-
-  if (departamento !== "todos") {
-    empleadosFiltrados = empleadosFiltrados.filter((e) => e.departamento === departamento)
-  }
-
-  if (estado !== "todos") {
-    empleadosFiltrados = empleadosFiltrados.filter((e) => e.estado === estado)
-  }
-
-  if (busqueda) {
-    empleadosFiltrados = empleadosFiltrados.filter(
-      (e) => e.nombre.toLowerCase().includes(busqueda) || e.id.toString().includes(busqueda),
-    )
-  }
-
-  // Ordenar empleados por departamento y nombre
-  empleadosFiltrados.sort((a, b) => {
-    if (a.departamento !== b.departamento) {
-      return a.departamento.localeCompare(b.departamento)
-    }
-    return a.nombre.localeCompare(b.nombre)
-  })
-
-  empleadosFiltrados.forEach((empleado) => {
-    const tr = document.createElement("tr")
-    tr.innerHTML = `
-      <td>${empleado.id}</td>
-      <td>${empleado.nombre}</td>
-      <td>${formatDepartamento(empleado.departamento)}</td>
-      <td>${empleado.puesto}</td>
-      <td>${formatDate(empleado.ingreso)}</td>
-      <td>${formatCurrency(empleado.salario)}</td>
-      <td><span class="status-badge ${empleado.estado}">${formatEstado(empleado.estado)}</span></td>
-      <td>
-        <button type="button" class="btn-secondary" onclick="verEmpleado(${empleado.id})">
-          <span class="material-symbols-outlined">visibility</span>
-        </button>
-        <button type="button" class="btn-secondary" onclick="editarEmpleado(${empleado.id})">
-          <span class="material-symbols-outlined">edit</span>
-        </button>
-      </td>
-    `
-
-    tablaBody.appendChild(tr)
-  })
-}
-
-function abrirModalNuevoEmpleado() {
-  // Limpiar formulario
-  document.getElementById("empleado-form").reset()
-  document.getElementById("empleado-id").value = ""
-
-  // Establecer fecha actual en el campo de ingreso
-  document.getElementById("empleado-ingreso").value = new Date().toISOString().split("T")[0]
-
-  // Cambiar título del modal
-  document.getElementById("modal-empleado-titulo").textContent = "Nuevo Empleado"
-
-  // Cambiar texto del botón
-  document.getElementById("btn-guardar-empleado").textContent = "Guardar Empleado"
-
-  // Abrir modal
-  document.getElementById("modal-empleado").style.display = "block"
-}
-
-function editarEmpleado(id) {
-  // Buscar empleado por ID
-  const empleado = empleados.find((e) => e.id === id)
-
-  if (empleado) {
-    // Llenar formulario con datos del empleado
-    document.getElementById("empleado-id").value = empleado.id
-    document.getElementById("empleado-nombre").value = empleado.nombre
-    document.getElementById("empleado-identificacion").value = empleado.identificacion
-    document.getElementById("empleado-nacimiento").value = empleado.nacimiento
-    document.getElementById("empleado-direccion").value = empleado.direccion
-    document.getElementById("empleado-telefono").value = empleado.telefono
-    document.getElementById("empleado-email").value = empleado.email
-    document.getElementById("empleado-departamento").value = empleado.departamento
-    document.getElementById("empleado-puesto").value = empleado.puesto
-    document.getElementById("empleado-ingreso").value = empleado.ingreso
-    document.getElementById("empleado-estado").value = empleado.estado
-    document.getElementById("empleado-salario").value = empleado.salario
-    document.getElementById("empleado-jornada").value = empleado.jornada
-    document.getElementById("empleado-observaciones").value = empleado.observaciones
-
-    // Cambiar título del modal
-    document.getElementById("modal-empleado-titulo").textContent = "Editar Empleado"
-
-    // Cambiar texto del botón
-    document.getElementById("btn-guardar-empleado").textContent = "Guardar Cambios"
-
-    // Abrir modal
-    document.getElementById("modal-empleado").style.display = "block"
-  }
-}
-
-function verEmpleado(id) {
-  // En una implementación real, aquí se mostraría un modal con los detalles del empleado
-  // Para simplificar, usamos el mismo modal de edición pero deshabilitando los campos
-  editarEmpleado(id)
-}
-
-function guardarEmpleado() {
-  // Obtener datos del formulario
-  const id = document.getElementById("empleado-id").value
-  const nombre = document.getElementById("empleado-nombre").value
-  const identificacion = document.getElementById("empleado-identificacion").value
-  const nacimiento = document.getElementById("empleado-nacimiento").value
-  const direccion = document.getElementById("empleado-direccion").value
-  const telefono = document.getElementById("empleado-telefono").value
-  const email = document.getElementById("empleado-email").value
-  const departamento = document.getElementById("empleado-departamento").value
-  const puesto = document.getElementById("empleado-puesto").value
-  const ingreso = document.getElementById("empleado-ingreso").value
-  const estado = document.getElementById("empleado-estado").value
-  const salario = Number.parseFloat(document.getElementById("empleado-salario").value)
-  const jornada = document.getElementById("empleado-jornada").value
-  const observaciones = document.getElementById("empleado-observaciones").value
-
-  // Validar datos
-  if (
-    !nombre ||
-    !identificacion ||
-    !nacimiento ||
-    !direccion ||
-    !telefono ||
-    !email ||
-    !departamento ||
-    !puesto ||
-    !ingreso ||
-    !estado ||
-    isNaN(salario) ||
-    !jornada
-  ) {
-    alert("Por favor complete todos los campos obligatorios")
-    return
-  }
-
-  if (id) {
-    // Actualizar empleado existente
-    const index = empleados.findIndex((e) => e.id === Number.parseInt(id))
-    if (index !== -1) {
-      empleados[index] = {
-        id: Number.parseInt(id),
-        nombre,
-        identificacion,
-        nacimiento,
-        direccion,
-        telefono,
-        email,
-        departamento,
-        puesto,
-        ingreso,
-        estado,
-        salario,
-        jornada,
-        observaciones,
-      }
-
-      alert("Empleado actualizado correctamente")
-    }
-  } else {
-    // Crear nuevo empleado
-    const nuevoId = empleados.length > 0 ? Math.max(...empleados.map((e) => e.id)) + 1 : 1
-
-    const nuevoEmpleado = {
-      id: nuevoId,
-      nombre,
-      identificacion,
-      nacimiento,
-      direccion,
-      telefono,
-      email,
-      departamento,
-      puesto,
-      ingreso,
-      estado,
-      salario,
-      jornada,
-      observaciones,
-    }
-
-    empleados.push(nuevoEmpleado)
-    alert("Empleado registrado correctamente")
-  }
-
-  // Cerrar modal
-  cerrarModal("modal-empleado")
-
-  // Actualizar tabla y dashboard
-  cargarTablaEmpleados()
-  cargarDashboard()
-
-  // Actualizar selectores de empleados
-  llenarSelectoresEmpleados()
-}
-
-// Funciones para Asistencias
-function cargarTablaAsistencias() {
-  const tablaBody = document.querySelector("#tabla-asistencias tbody")
-  tablaBody.innerHTML = ""
-
-  // Ordenar asistencias por fecha (más recientes primero)
-  const asistenciasOrdenadas = [...asistencias].sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
-
-  asistenciasOrdenadas.forEach((asistencia) => {
-    const empleado = empleados.find((e) => e.id === asistencia.empleadoId)
-    if (!empleado) return
-
-    const tr = document.createElement("tr")
-    tr.innerHTML = `
-      <td>${formatDate(asistencia.fecha)}</td>
-      <td>${empleado.nombre}</td>
-      <td>${formatDepartamento(empleado.departamento)}</td>
-      <td><span class="status-badge ${asistencia.tipo}">${formatTipoAsistencia(asistencia.tipo)}</span></td>
-      <td>${asistencia.horaEntrada || "-"}</td>
-      <td>${asistencia.horaSalida || "-"}</td>
-      <td>${asistencia.observaciones || "-"}</td>
-      <td>
-        <button type="button" class="btn-secondary" onclick="editarAsistencia(${asistencia.id})">
-          <span class="material-symbols-outlined">edit</span>
-        </button>
-      </td>
-    `
-
-    tablaBody.appendChild(tr)
-  })
-
-  // Actualizar resumen de asistencias
-  actualizarResumenAsistencias()
-}
-
-function filtrarAsistencias() {
-  const empleadoId = document.getElementById("filtro-empleado-asistencia").value
-  const tipo = document.getElementById("filtro-tipo-asistencia").value
-  const fechaInicio = document.getElementById("filtro-fecha-inicio-asistencia").value
-  const fechaFin = document.getElementById("filtro-fecha-fin-asistencia").value
-
-  const tablaBody = document.querySelector("#tabla-asistencias tbody")
-  tablaBody.innerHTML = ""
-
-  // Filtrar asistencias
-  let asistenciasFiltradas = [...asistencias]
-
-  if (empleadoId !== "todos") {
-    asistenciasFiltradas = asistenciasFiltradas.filter((a) => a.empleadoId === Number.parseInt(empleadoId))
-  }
-
-  if (tipo !== "todos") {
-    asistenciasFiltradas = asistenciasFiltradas.filter((a) => a.tipo === tipo)
-  }
-
-  if (fechaInicio) {
-    asistenciasFiltradas = asistenciasFiltradas.filter((a) => a.fecha >= fechaInicio)
-  }
-
-  if (fechaFin) {
-    asistenciasFiltradas = asistenciasFiltradas.filter((a) => a.fecha <= fechaFin)
-  }
-
-  // Ordenar asistencias por fecha (más recientes primero)
-  asistenciasFiltradas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
-
-  asistenciasFiltradas.forEach((asistencia) => {
-    const empleado = empleados.find((e) => e.id === asistencia.empleadoId)
-    if (!empleado) return
-
-    const tr = document.createElement("tr")
-    tr.innerHTML = `
-      <td>${formatDate(asistencia.fecha)}</td>
-      <td>${empleado.nombre}</td>
-      <td>${formatDepartamento(empleado.departamento)}</td>
-      <td><span class="status-badge ${asistencia.tipo}">${formatTipoAsistencia(asistencia.tipo)}</span></td>
-      <td>${asistencia.horaEntrada || "-"}</td>
-      <td>${asistencia.horaSalida || "-"}</td>
-      <td>${asistencia.observaciones || "-"}</td>
-      <td>
-        <button type="button" class="btn-secondary" onclick="editarAsistencia(${asistencia.id})">
-          <span class="material-symbols-outlined">edit</span>
-        </button>
-      </td>
-    `
-
-    tablaBody.appendChild(tr)
-  })
-}
-
-function actualizarResumenAsistencias() {
-  const mes = Number.parseInt(document.getElementById("filtro-mes-resumen").value)
-  const anio = Number.parseInt(document.getElementById("filtro-anio-resumen").value)
-
-  // Filtrar asistencias del mes y año seleccionados
-  const primerDiaMes = new Date(anio, mes - 1, 1)
-  const ultimoDiaMes = new Date(anio, mes, 0)
-
-  const asistenciasMes = asistencias.filter((a) => {
-    const fechaAsistencia = new Date(a.fecha)
-    return fechaAsistencia >= primerDiaMes && fechaAsistencia <= ultimoDiaMes
-  })
-
-  // Contar por tipo
-  const totalAsistencias = asistenciasMes.filter((a) => a.tipo === "asistencia").length
-  const totalFaltas = asistenciasMes.filter((a) => a.tipo === "falta").length
-  const totalRetardos = asistenciasMes.filter((a) => a.tipo === "retardo").length
-
-  // Calcular porcentaje
-  const totalRegistros = asistenciasMes.length
-  const porcentajeAsistencia = totalRegistros > 0 ? Math.round((totalAsistencias / totalRegistros) * 100) : 0
-
-  // Actualizar resumen
-  document.getElementById("resumen-asistencias").textContent = totalAsistencias
-  document.getElementById("resumen-faltas").textContent = totalFaltas
-  document.getElementById("resumen-retardos").textContent = totalRetardos
-  document.getElementById("resumen-porcentaje").textContent = `${porcentajeAsistencia}%`
-}
-
-function abrirModalNuevaAsistencia() {
-  // Limpiar formulario
-  document.getElementById("asistencia-form").reset()
-
-  // Establecer fecha actual
-  document.getElementById("asistencia-fecha").value = new Date().toISOString().split("T")[0]
-
-  // Abrir modal
-  document.getElementById("modal-asistencia").style.display = "block"
-}
-
-function editarAsistencia(id) {
-  // Buscar asistencia por ID
-  const asistencia = asistencias.find((a) => a.id === id)
-
-  if (asistencia) {
-    // Llenar formulario con datos de la asistencia
-    document.getElementById("asistencia-fecha").value = asistencia.fecha
-    document.getElementById("asistencia-empleado").value = asistencia.empleadoId
-    document.getElementById("asistencia-tipo").value = asistencia.tipo
-    document.getElementById("asistencia-hora-entrada").value = asistencia.horaEntrada
-    document.getElementById("asistencia-hora-salida").value = asistencia.horaSalida
-    document.getElementById("asistencia-observaciones").value = asistencia.observaciones
-
-    // Abrir modal
-    document.getElementById("modal-asistencia").style.display = "block"
-  }
-}
-
-function guardarAsistencia() {
-  // Obtener datos del formulario
-  const fecha = document.getElementById("asistencia-fecha").value
-  const empleadoId = Number.parseInt(document.getElementById("asistencia-empleado").value)
-  const tipo = document.getElementById("asistencia-tipo").value
-  const horaEntrada = document.getElementById("asistencia-hora-entrada").value
-  const horaSalida = document.getElementById("asistencia-hora-salida").value
-  const observaciones = document.getElementById("asistencia-observaciones").value
-
-  // Validar datos
-  if (!fecha || !empleadoId || !tipo) {
-    alert("Por favor complete todos los campos obligatorios")
-    return
-  }
-
-  // Verificar si ya existe una asistencia para este empleado en esta fecha
-  const asistenciaExistente = asistencias.find((a) => a.empleadoId === empleadoId && a.fecha === fecha)
-
-  if (asistenciaExistente) {
-    // Actualizar asistencia existente
-    asistenciaExistente.tipo = tipo
-    asistenciaExistente.horaEntrada = horaEntrada
-    asistenciaExistente.horaSalida = horaSalida
-    asistenciaExistente.observaciones = observaciones
-
-    alert("Asistencia actualizada correctamente")
-  } else {
-    // Crear nueva asistencia
-    const nuevoId = asistencias.length > 0 ? Math.max(...asistencias.map((a) => a.id)) + 1 : 1
-
-    const nuevaAsistencia = {
-      id: nuevoId,
-      fecha,
-      empleadoId,
-      tipo,
-      horaEntrada,
-      horaSalida,
-      observaciones,
-    }
-
-    asistencias.push(nuevaAsistencia)
-    alert("Asistencia registrada correctamente")
-  }
-
-  // Cerrar modal
-  cerrarModal("modal-asistencia")
-
-  // Actualizar tabla y dashboard
-  cargarTablaAsistencias()
-  cargarDashboard()
-}
-
-// Funciones para Nómina
-function cargarHistorialNomina() {
-  const tablaBody = document.querySelector("#tabla-historial-nomina tbody")
-  tablaBody.innerHTML = ""
-
-  // Ordenar nóminas por fecha (más recientes primero)
-  const nominasOrdenadas = [...nominas].sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
-
-  nominasOrdenadas.forEach((nomina) => {
-    const empleado = empleados.find((e) => e.id === nomina.empleadoId)
-    if (!empleado) return
-
-    const tr = document.createElement("tr")
-    tr.innerHTML = `
-      <td>${formatDate(nomina.fecha)}</td>
-      <td>${empleado.nombre}</td>
-      <td>${nomina.periodo}</td>
-      <td>${formatCurrency(nomina.percepciones)}</td>
-      <td>${formatCurrency(nomina.deducciones)}</td>
-      <td>${formatCurrency(nomina.pagoNeto)}</td>
-      <td><span class="status-badge ${nomina.estado}">${formatEstadoNomina(nomina.estado)}</span></td>
-      <td>
-        <button type="button" class="btn-secondary" onclick="verNomina(${nomina.id})">
-          <span class="material-symbols-outlined">visibility</span>
-        </button>
-      </td>
-    `
-
-    tablaBody.appendChild(tr)
-  })
-}
-
-function filtrarHistorialNomina() {
-  const empleadoId = document.getElementById("filtro-empleado-nomina").value
-
-  const tablaBody = document.querySelector("#tabla-historial-nomina tbody")
-  tablaBody.innerHTML = ""
-
-  // Filtrar nóminas
-  let nominasFiltradas = [...nominas]
-
-  if (empleadoId !== "todos") {
-    nominasFiltradas = nominasFiltradas.filter((n) => n.empleadoId === Number.parseInt(empleadoId))
-  }
-
-  // Ordenar nóminas por fecha (más recientes primero)
-  nominasFiltradas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
-
-  nominasFiltradas.forEach((nomina) => {
-    const empleado = empleados.find((e) => e.id === nomina.empleadoId)
-    if (!empleado) return
-
-    const tr = document.createElement("tr")
-    tr.innerHTML = `
-      <td>${formatDate(nomina.fecha)}</td>
-      <td>${empleado.nombre}</td>
-      <td>${nomina.periodo}</td>
-      <td>${formatCurrency(nomina.percepciones)}</td>
-      <td>${formatCurrency(nomina.deducciones)}</td>
-      <td>${formatCurrency(nomina.pagoNeto)}</td>
-      <td><span class="status-badge ${nomina.estado}">${formatEstadoNomina(nomina.estado)}</span></td>
-      <td>
-        <button type="button" class="btn-secondary" onclick="verNomina(${nomina.id})">
-          <span class="material-symbols-outlined">visibility</span>
-        </button>
-      </td>
-    `
-
-    tablaBody.appendChild(tr)
-  })
-}
-
-function calcularNomina() {
-  // Obtener datos del formulario
-  const empleadoId = Number.parseInt(document.getElementById("nomina-empleado").value)
-  const mes = Number.parseInt(document.getElementById("nomina-mes").value)
-  const anio = Number.parseInt(document.getElementById("nomina-anio").value)
-  const bonoAdicional = Number.parseFloat(document.getElementById("nomina-bono").value) || 0
-  const descuentoAdicional = Number.parseFloat(document.getElementById("nomina-descuento").value) || 0
-  const observaciones = document.getElementById("nomina-observaciones").value
-
-  // Validar datos
-  if (!empleadoId || isNaN(mes) || isNaN(anio)) {
-    alert("Por favor seleccione un empleado y un periodo")
-    return
-  }
-
-  // Buscar empleado
-  const empleado = empleados.find((e) => e.id === empleadoId)
-  if (!empleado) {
-    alert("Empleado no encontrado")
-    return
-  }
-
-  // Calcular periodo
-  const nombresMeses = [
-    "Enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Septiembre",
-    "Octubre",
-    "Noviembre",
-    "Diciembre",
-  ]
-  const periodo = `${nombresMeses[mes - 1]} ${anio}`
-
-  // Filtrar asistencias del mes y año seleccionados
-  const primerDiaMes = new Date(anio, mes - 1, 1)
-  const ultimoDiaMes = new Date(anio, mes, 0)
-
-  const asistenciasMes = asistencias.filter((a) => {
-    const fechaAsistencia = new Date(a.fecha)
-    return fechaAsistencia >= primerDiaMes && fechaAsistencia <= ultimoDiaMes && a.empleadoId === empleadoId
-  })
-
-  // Contar faltas y retardos
-  const faltas = asistenciasMes.filter((a) => a.tipo === "falta").length
-  const retardos = asistenciasMes.filter((a) => a.tipo === "retardo").length
-
-  // Calcular descuentos
-  const descuentoPorFalta = (empleado.salario / 30) * faltas // Asumiendo 30 días por mes
-  const descuentoPorRetardo = (empleado.salario / 30 / 3) * retardos // Un retardo equivale a 1/3 de día
-
-  // Calcular percepciones y deducciones
-  const salarioBase = empleado.salario
-  const totalPercepciones = salarioBase + bonoAdicional
-  const totalDeducciones = descuentoPorFalta + descuentoPorRetardo + descuentoAdicional
-  const pagoNeto = totalPercepciones - totalDeducciones
-
-  // Mostrar resultado
-  document.getElementById("nomina-nombre-empleado").textContent = empleado.nombre
-  document.getElementById("nomina-puesto-empleado").textContent =
-    `${empleado.puesto} - ${formatDepartamento(empleado.departamento)}`
-  document.getElementById("nomina-id-empleado").textContent = `ID: ${empleado.id}`
-
-  document.getElementById("nomina-periodo").textContent = `Periodo: ${periodo}`
-  document.getElementById("nomina-fecha-calculo").textContent = `Fecha de cálculo: ${new Date().toLocaleDateString()}`
-
-  document.getElementById("nomina-salario-base").textContent = formatCurrency(salarioBase)
-  document.getElementById("nomina-bonos").textContent = formatCurrency(bonoAdicional)
-  document.getElementById("nomina-total-percepciones").textContent = formatCurrency(totalPercepciones)
-
-  document.getElementById("nomina-faltas").textContent = formatCurrency(descuentoPorFalta)
-  document.getElementById("nomina-retardos").textContent = formatCurrency(descuentoPorRetardo)
-  document.getElementById("nomina-descuentos").textContent = formatCurrency(descuentoAdicional)
-  document.getElementById("nomina-total-deducciones").textContent = formatCurrency(totalDeducciones)
-
-  document.getElementById("nomina-pago-neto").textContent = formatCurrency(pagoNeto)
-  document.getElementById("nomina-observaciones-resultado").textContent = observaciones
-
-  // Mostrar resultado
-  document.getElementById("resultado-nomina").classList.remove("hidden")
-}
-
-function guardarNomina() {
-  // Obtener datos del cálculo
-  const empleadoId = Number.parseInt(document.getElementById("nomina-empleado").value)
-  const mes = Number.parseInt(document.getElementById("nomina-mes").value)
-  const anio = Number.parseInt(document.getElementById("nomina-anio").value)
-
-  // Calcular periodo
-  const nombresMeses = [
-    "Enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Septiembre",
-    "Octubre",
-    "Noviembre",
-    "Diciembre",
-  ]
-  const periodo = `${nombresMeses[mes - 1]} ${anio}`
-
-  // Obtener montos
-  const percepciones = Number.parseFloat(
-    document.getElementById("nomina-total-percepciones").textContent.replace("$", "").replace(",", ""),
-  )
-  const deducciones = Number.parseFloat(
-    document.getElementById("nomina-total-deducciones").textContent.replace("$", "").replace(",", ""),
-  )
-  const pagoNeto = Number.parseFloat(
-    document.getElementById("nomina-pago-neto").textContent.replace("$", "").replace(",", ""),
-  )
-  const observaciones = document.getElementById("nomina-observaciones-resultado").textContent
-
-  // Verificar si ya existe una nómina para este empleado en este periodo
-  const nominaExistente = nominas.find((n) => n.empleadoId === empleadoId && n.periodo === periodo)
-
-  if (nominaExistente) {
-    // Actualizar nómina existente
-    nominaExistente.fecha = new Date().toISOString().split("T")[0]
-    nominaExistente.percepciones = percepciones
-    nominaExistente.deducciones = deducciones
-    nominaExistente.pagoNeto = pagoNeto
-    nominaExistente.observaciones = observaciones
-
-    alert("Nómina actualizada correctamente")
-  } else {
-    // Crear nueva nómina
-    const nuevoId = nominas.length > 0 ? Math.max(...nominas.map((n) => n.id)) + 1 : 1
-
-    const nuevaNomina = {
-      id: nuevoId,
-      fecha: new Date().toISOString().split("T")[0],
-      empleadoId,
-      periodo,
-      percepciones,
-      deducciones,
-      pagoNeto,
-      estado: "completado",
-      observaciones,
-    }
-
-    nominas.push(nuevaNomina)
-    alert("Nómina guardada correctamente")
-  }
-
-  // Ocultar resultado
-  document.getElementById("resultado-nomina").classList.add("hidden")
-
-  // Limpiar formulario
-  limpiarFormulario("nomina-form")
-
-  // Actualizar historial
-  cargarHistorialNomina()
-}
-
-function verNomina(id) {
-  // Buscar nómina por ID
-  const nomina = nominas.find((n) => n.id === id)
-
-  if (nomina) {
-    // Buscar empleado
-    const empleado = empleados.find((e) => e.id === nomina.empleadoId)
-    if (!empleado) return
-
-    // Crear contenido del detalle
-    const detalleNomina = document.getElementById("nomina-detalle")
-
-    detalleNomina.innerHTML = `
-      <div class="nomina-header">
-        <div class="nomina-employee-info">
-          <h4>${empleado.nombre}</h4>
-          <p>${empleado.puesto} - ${formatDepartamento(empleado.departamento)}</p>
-          <p>ID: ${empleado.id}</p>
-        </div>
-        <div class="nomina-period-info">
-          <h4>Periodo: ${nomina.periodo}</h4>
-          <p>Fecha de pago: ${formatDate(nomina.fecha)}</p>
-        </div>
-      </div>
-      
-      <div class="nomina-details">
-        <div class="nomina-section">
-          <h5>Percepciones</h5>
-          <div class="nomina-item">
-            <span class="nomina-concept">Total Percepciones:</span>
-            <span class="nomina-amount">${formatCurrency(nomina.percepciones)}</span>
-          </div>
-        </div>
-        
-        <div class="nomina-section">
-          <h5>Deducciones</h5>
-          <div class="nomina-item">
-            <span class="nomina-concept">Total Deducciones:</span>
-            <span class="nomina-amount">${formatCurrency(nomina.deducciones)}</span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="nomina-total">
-        <span class="nomina-concept">Pago Neto:</span>
-        <span class="nomina-amount">${formatCurrency(nomina.pagoNeto)}</span>
-      </div>
-      
-      <div class="nomina-observations">
-        <h5>Observaciones:</h5>
-        <p>${nomina.observaciones || "Sin observaciones"}</p>
-      </div>
-    `
-
-    // Abrir modal
-    document.getElementById("modal-ver-nomina").style.display = "block"
-  }
-}
-
-// Funciones para Reportes
-function generarReporte() {
-  const tipoReporte = document.getElementById("reporte-tipo").value
-  const periodoReporte = document.getElementById("reporte-periodo").value
-
-  // Calcular fechas según el periodo seleccionado
-  const fechaActual = new Date()
-  let fechaInicio = new Date()
-  let fechaFin = new Date()
-  let tituloReporte = ""
-
-  if (periodoReporte === "mensual") {
-    fechaInicio = new Date(fechaActual.getFullYear(), fechaActual.getMonth(), 1)
-    tituloReporte = `Reporte Mensual - ${fechaInicio.toLocaleDateString(undefined, { month: "long", year: "numeric" })}`
-  } else if (periodoReporte === "trimestral") {
-    const trimestre = Math.floor(fechaActual.getMonth() / 3)
-    fechaInicio = new Date(fechaActual.getFullYear(), trimestre * 3, 1)
-    fechaFin = new Date(fechaActual.getFullYear(), trimestre * 3 + 3, 0)
-    tituloReporte = `Reporte Trimestral - ${fechaInicio.toLocaleDateString(undefined, { month: "long" })} a ${fechaFin.toLocaleDateString(undefined, { month: "long", year: "numeric" })}`
-  } else if (periodoReporte === "anual") {
-    fechaInicio = new Date(fechaActual.getFullYear(), 0, 1)
-    tituloReporte = `Reporte Anual - ${fechaActual.getFullYear()}`
-  } else if (periodoReporte === "personalizado") {
-    fechaInicio = new Date(document.getElementById("reporte-fecha-inicio").value)
-    fechaFin = new Date(document.getElementById("reporte-fecha-fin").value)
-    tituloReporte = `Reporte Personalizado - ${formatDate(fechaInicio.toISOString().split("T")[0])} al ${formatDate(fechaFin.toISOString().split("T")[0])}`
-  }
-
-  // Mostrar sección de reporte
-  document.getElementById("reporte-generado").classList.remove("hidden")
-
-  // Generar contenido según el tipo de reporte
-  if (tipoReporte === "empleados") {
-    generarReporteEmpleados(tituloReporte)
-  } else if (tipoReporte === "asistencias") {
-    generarReporteAsistencias(fechaInicio, fechaFin, tituloReporte)
-  } else if (tipoReporte === "nomina") {
-    generarReporteNomina(fechaInicio, fechaFin, tituloReporte)
-  } else if (tipoReporte === "rotacion") {
-    generarReporteRotacion(fechaInicio, fechaFin, tituloReporte)
-  }
-}
-
-function generarReporteEmpleados(titulo) {
-  document.getElementById("reporte-titulo").textContent = `Listado de Empleados - ${titulo}`
-
-  const contenidoReporte = document.getElementById("reporte-contenido")
-
-  // Crear HTML del reporte
-  let html = `
-    <div class="report-header">
-      <div class="report-meta">
-        <p><strong>Fecha de generación:</strong> ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
-        <p><strong>Generado por:</strong> Admin</p>
-      </div>
-      <div class="report-summary">
-        <div class="summary-stats">
-          <div class="stat-item">
-            <span class="stat-label">Total Empleados:</span>
-            <span class="stat-value">${empleados.length}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Empleados Activos:</span>
-            <span class="stat-value">${empleados.filter((e) => e.estado === "activo").length}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <h4>Listado de Empleados</h4>
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Departamento</th>
-            <th>Puesto</th>
-            <th>Fecha Ingreso</th>
-            <th>Salario Base</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-  `
-
-  // Ordenar empleados por departamento y nombre
-  const empleadosOrdenados = [...empleados].sort((a, b) => {
-    if (a.departamento !== b.departamento) {
-      return a.departamento.localeCompare(b.departamento)
-    }
-    return a.nombre.localeCompare(b.nombre)
-  })
-
-  // Agregar filas de empleados
-  empleadosOrdenados.forEach((empleado) => {
-    html += `
-      <tr>
-        <td>${empleado.id}</td>
-        <td>${empleado.nombre}</td>
-        <td>${formatDepartamento(empleado.departamento)}</td>
-        <td>${empleado.puesto}</td>
-        <td>${formatDate(empleado.ingreso)}</td>
-        <td>${formatCurrency(empleado.salario)}</td>
-        <td>${formatEstado(empleado.estado)}</td>
-      </tr>
-    `
-  })
-
-  html += `
-        </tbody>
-      </table>
-    </div>
-  `
-
-  contenidoReporte.innerHTML = html
-}
-
-function generarReporteAsistencias(fechaInicio, fechaFin, titulo) {
-  document.getElementById("reporte-titulo").textContent = `Reporte de Asistencias - ${titulo}`
-
-  const contenidoReporte = document.getElementById("reporte-contenido")
-
-  // Filtrar asistencias por periodo
-  const asistenciasPeriodo = asistencias.filter((a) => {
-    const fechaAsistencia = new Date(a.fecha)
-    return fechaAsistencia >= fechaInicio && fechaAsistencia <= fechaFin
-  })
-
-  // Contar por tipo
-  const totalAsistencias = asistenciasPeriodo.filter((a) => a.tipo === "asistencia").length
-  const totalFaltas = asistenciasPeriodo.filter((a) => a.tipo === "falta").length
-  const totalRetardos = asistenciasPeriodo.filter((a) => a.tipo === "retardo").length
-  const totalPermisos = asistenciasPeriodo.filter((a) => a.tipo === "permiso").length
-  const totalVacaciones = asistenciasPeriodo.filter((a) => a.tipo === "vacaciones").length
-
-  // Calcular porcentaje
-  const totalRegistros = asistenciasPeriodo.length
-  const porcentajeAsistencia = totalRegistros > 0 ? Math.round((totalAsistencias / totalRegistros) * 100) : 0
-
-  // Crear HTML del reporte
-  let html = `
-    <div class="report-header">
-      <div class="report-meta">
-        <p><strong>Fecha de generación:</strong> ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
-        <p><strong>Generado por:</strong> Admin</p>
-      </div>
-      <div class="report-summary">
-        <div class="summary-stats">
-          <div class="stat-item">
-            <span class="stat-label">Total Registros:</span>
-            <span class="stat-value">${totalRegistros}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Asistencias:</span>
-            <span class="stat-value">${totalAsistencias} (${porcentajeAsistencia}%)</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Faltas:</span>
-            <span class="stat-value">${totalFaltas}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Retardos:</span>
-            <span class="stat-value">${totalRetardos}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <h4>Detalle de Asistencias</h4>
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Fecha</th>
-            <th>Empleado</th>
-            <th>Departamento</th>
-            <th>Tipo</th>
-            <th>Hora Entrada</th>
-            <th>Hora Salida</th>
-            <th>Observaciones</th>
-          </tr>
-        </thead>
-        <tbody>
-  `
-
-  // Ordenar asistencias por fecha
-  const asistenciasOrdenadas = [...asistenciasPeriodo].sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
-
-  // Agregar filas de asistencias
-  asistenciasOrdenadas.forEach((asistencia) => {
-    const empleado = empleados.find((e) => e.id === asistencia.empleadoId)
-    if (!empleado) return
-
-    html += `
-      <tr>
-        <td>${formatDate(asistencia.fecha)}</td>
-        <td>${empleado.nombre}</td>
-        <td>${formatDepartamento(empleado.departamento)}</td>
-        <td>${formatTipoAsistencia(asistencia.tipo)}</td>
-        <td>${asistencia.horaEntrada || "-"}</td>
-        <td>${asistencia.horaSalida || "-"}</td>
-        <td>${asistencia.observaciones || "-"}</td>
-      </tr>
-    `
-  })
-
-  html += `
-        </tbody>
-      </table>
-    </div>
-    
-    <h4>Resumen por Empleado</h4>
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Empleado</th>
-            <th>Departamento</th>
-            <th>Asistencias</th>
-            <th>Faltas</th>
-            <th>Retardos</th>
-            <th>% Asistencia</th>
-          </tr>
-        </thead>
-        <tbody>
-  `
-
-  // Agrupar asistencias por empleado
-  const asistenciasPorEmpleado = {}
-
-  asistenciasPeriodo.forEach((asistencia) => {
-    if (!asistenciasPorEmpleado[asistencia.empleadoId]) {
-      asistenciasPorEmpleado[asistencia.empleadoId] = {
-        asistencias: 0,
-        faltas: 0,
-        retardos: 0,
-        total: 0,
-      }
-    }
-
-    asistenciasPorEmpleado[asistencia.empleadoId].total++
-
-    if (asistencia.tipo === "asistencia") {
-      asistenciasPorEmpleado[asistencia.empleadoId].asistencias++
-    } else if (asistencia.tipo === "falta" || asistencia.tipo === "permiso" || asistencia.tipo === "vacaciones") {
-      asistenciasPorEmpleado[asistencia.empleadoId].faltas++
-    } else if (asistencia.tipo === "retardo") {
-      asistenciasPorEmpleado[asistencia.empleadoId].retardos++
-    }
-  })
-
-  // Agregar filas de resumen por empleado
-  Object.entries(asistenciasPorEmpleado).forEach(([empleadoId, datos]) => {
-    const empleado = empleados.find((e) => e.id === Number.parseInt(empleadoId))
-    if (!empleado) return
-
-    const porcentajeAsistencia = datos.total > 0 ? Math.round((datos.asistencias / datos.total) * 100) : 0
-
-    html += `
-      <tr>
-        <td>${empleado.nombre}</td>
-        <td>${formatDepartamento(empleado.departamento)}</td>
-        <td>${datos.asistencias}</td>
-        <td>${datos.faltas}</td>
-        <td>${datos.retardos}</td>
-        <td>${porcentajeAsistencia}%</td>
-      </tr>
-    `
-  })
-
-  html += `
-        </tbody>
-      </table>
-    </div>
-  `
-
-  contenidoReporte.innerHTML = html
-}
-
-function generarReporteNomina(fechaInicio, fechaFin, titulo) {
-  document.getElementById("reporte-titulo").textContent = `Reporte de Nómina - ${titulo}`
-
-  const contenidoReporte = document.getElementById("reporte-contenido")
-
-  // Filtrar nóminas por periodo
-  const nominasPeriodo = nominas.filter((n) => {
-    const fechaNomina = new Date(n.fecha)
-    return fechaNomina >= fechaInicio && fechaNomina <= fechaFin
-  })
-
-  // Calcular totales
-  const totalPercepciones = nominasPeriodo.reduce((total, n) => total + n.percepciones, 0)
-  const totalDeducciones = nominasPeriodo.reduce((total, n) => total + n.deducciones, 0)
-  const totalPagoNeto = nominasPeriodo.reduce((total, n) => total + n.pagoNeto, 0)
-
-  // Crear HTML del reporte
-  let html = `
-    <div class="report-header">
-      <div class="report-meta">
-        <p><strong>Fecha de generación:</strong> ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
-        <p><strong>Generado por:</strong> Admin</p>
-      </div>
-      <div class="report-summary">
-        <div class="summary-stats">
-          <div class="stat-item">
-            <span class="stat-label">Total Percepciones:</span>
-            <span class="stat-value">${formatCurrency(totalPercepciones)}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Total Deducciones:</span>
-            <span class="stat-value">${formatCurrency(totalDeducciones)}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Total Pago Neto:</span>
-            <span class="stat-value">${formatCurrency(totalPagoNeto)}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <h4>Detalle de Nómina</h4>
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Fecha</th>
-            <th>Empleado</th>
-            <th>Departamento</th>
-            <th>Periodo</th>
-            <th>Percepciones</th>
-            <th>Deducciones</th>
-            <th>Pago Neto</th>
-          </tr>
-        </thead>
-        <tbody>
-  `
-
-  // Ordenar nóminas por fecha
-  const nominasOrdenadas = [...nominasPeriodo].sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
-
-  // Agregar filas de nóminas
-  nominasOrdenadas.forEach((nomina) => {
-    const empleado = empleados.find((e) => e.id === nomina.empleadoId)
-    if (!empleado) return
-
-    html += `
-      <tr>
-        <td>${formatDate(nomina.fecha)}</td>
-        <td>${empleado.nombre}</td>
-        <td>${formatDepartamento(empleado.departamento)}</td>
-        <td>${nomina.periodo}</td>
-        <td>${formatCurrency(nomina.percepciones)}</td>
-        <td>${formatCurrency(nomina.deducciones)}</td>
-        <td>${formatCurrency(nomina.pagoNeto)}</td>
-      </tr>
-    `
-  })
-
-  html += `
-        </tbody>
-      </table>
-    </div>
-    
-    <h4>Resumen por Departamento</h4>
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Departamento</th>
-            <th>Empleados</th>
-            <th>Percepciones</th>
-            <th>Deducciones</th>
-            <th>Pago Neto</th>
-          </tr>
-        </thead>
-        <tbody>
-  `
-
-  // Agrupar nóminas por departamento
-  const nominasPorDepartamento = {}
-
-  nominasPeriodo.forEach((nomina) => {
-    const empleado = empleados.find((e) => e.id === nomina.empleadoId)
-    if (!empleado) return
-
-    const departamento = empleado.departamento
-
-    if (!nominasPorDepartamento[departamento]) {
-      nominasPorDepartamento[departamento] = {
-        empleados: new Set(),
-        percepciones: 0,
-        deducciones: 0,
-        pagoNeto: 0,
-      }
-    }
-
-    nominasPorDepartamento[departamento].empleados.add(empleado.id)
-    nominasPorDepartamento[departamento].percepciones += nomina.percepciones
-    nominasPorDepartamento[departamento].deducciones += nomina.deducciones
-    nominasPorDepartamento[departamento].pagoNeto += nomina.pagoNeto
-  })
-
-  // Agregar filas de resumen por departamento
-  Object.entries(nominasPorDepartamento).forEach(([departamento, datos]) => {
-    html += `
-      <tr>
-        <td>${formatDepartamento(departamento)}</td>
-        <td>${datos.empleados.size}</td>
-        <td>${formatCurrency(datos.percepciones)}</td>
-        <td>${formatCurrency(datos.deducciones)}</td>
-        <td>${formatCurrency(datos.pagoNeto)}</td>
-      </tr>
-    `
-  })
-
-  html += `
-        </tbody>
-      </table>
-    </div>
-  `
-
-  contenidoReporte.innerHTML = html
-}
-
-function generarReporteRotacion(fechaInicio, fechaFin, titulo) {
-  document.getElementById("reporte-titulo").textContent = `Rotación de Personal - ${titulo}`
-
-  const contenidoReporte = document.getElementById("reporte-contenido")
-
-  // Filtrar empleados por fecha de ingreso
-  const empleadosIngreso = empleados.filter((e) => {
-    const fechaIngreso = new Date(e.ingreso)
-    return fechaIngreso >= fechaInicio && fechaIngreso <= fechaFin
-  })
-
-  // Simular empleados que salieron en el periodo
-  // En una implementación real, esto vendría de una tabla de bajas de personal
-  const empleadosSalida = [
-    {
-      id: 101,
-      nombre: "Pedro Sánchez",
-      departamento: "restaurante",
-      puesto: "Mesero",
-      ingreso: "2022-05-10",
-      salida: "2023-10-15",
-      motivo: "Renuncia voluntaria",
-    },
-    {
-      id: 102,
-      nombre: "Laura Jiménez",
-      departamento: "recepcion",
-      puesto: "Recepcionista",
-      ingreso: "2021-08-20",
-      salida: "2023-09-30",
-      motivo: "Mejor oferta laboral",
-    },
-  ]
-
-  // Calcular índice de rotación
-  // Fórmula: ((Altas + Bajas) / 2) / Plantilla promedio * 100
-  const totalIngresos = empleadosIngreso.length
-  const totalSalidas = empleadosSalida.length
-  const plantillaPromedio = empleados.length - totalIngresos / 2 + totalSalidas / 2
-  const indiceRotacion = plantillaPromedio > 0 ? ((totalIngresos + totalSalidas) / 2 / plantillaPromedio) * 100 : 0
-
-  // Crear HTML del reporte
-  let html = `
-    <div class="report-header">
-      <div class="report-meta">
-        <p><strong>Fecha de generación:</strong> ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
-        <p><strong>Generado por:</strong> Admin</p>
-      </div>
-      <div class="report-summary">
-        <div class="summary-stats">
-          <div class="stat-item">
-            <span class="stat-label">Total Ingresos:</span>
-            <span class="stat-value">${totalIngresos}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Total Salidas:</span>
-            <span class="stat-value">${totalSalidas}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Índice de Rotación:</span>
-            <span class="stat-value">${indiceRotacion.toFixed(2)}%</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <h4>Ingresos de Personal</h4>
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Departamento</th>
-            <th>Puesto</th>
-            <th>Fecha Ingreso</th>
-          </tr>
-        </thead>
-        <tbody>
-  `
-
-  // Ordenar empleados por fecha de ingreso
-  const empleadosIngresoOrdenados = [...empleadosIngreso].sort((a, b) => new Date(a.ingreso) - new Date(b.ingreso))
-
-  // Agregar filas de ingresos
-  empleadosIngresoOrdenados.forEach((empleado) => {
-    html += `
-      <tr>
-        <td>${empleado.id}</td>
-        <td>${empleado.nombre}</td>
-        <td>${formatDepartamento(empleado.departamento)}</td>
-        <td>${empleado.puesto}</td>
-        <td>${formatDate(empleado.ingreso)}</td>
-      </tr>
-    `
-  })
-
-  html += `
-        </tbody>
-      </table>
-    </div>
-    
-    <h4>Salidas de Personal</h4>
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Departamento</th>
-            <th>Puesto</th>
-            <th>Fecha Ingreso</th>
-            <th>Fecha Salida</th>
-            <th>Motivo</th>
-          </tr>
-        </thead>
-        <tbody>
-  `
-
-  // Ordenar empleados por fecha de salida
-  const empleadosSalidaOrdenados = [...empleadosSalida].sort((a, b) => new Date(a.salida) - new Date(b.salida))
-
-  // Agregar filas de salidas
-  empleadosSalidaOrdenados.forEach((empleado) => {
-    html += `
-      <tr>
-        <td>${empleado.id}</td>
-        <td>${empleado.nombre}</td>
-        <td>${formatDepartamento(empleado.departamento)}</td>
-        <td>${empleado.puesto}</td>
-        <td>${formatDate(empleado.ingreso)}</td>
-        <td>${formatDate(empleado.salida)}</td>
-        <td>${empleado.motivo}</td>
-      </tr>
-    `
-  })
-
-  html += `
-        </tbody>
-      </table>
-    </div>
-  `
-
-  contenidoReporte.innerHTML = html
-}
-
-function generarReporteRapido(tipo) {
-  // Establecer valores en el formulario
-  document.getElementById("reporte-tipo").value = tipo
-  document.getElementById("reporte-periodo").value = "mensual"
-  document.getElementById("periodo-personalizado").classList.add("hidden")
-
-  // Generar reporte
-  generarReporte()
-}
-
-// Funciones para exportar
-function exportarEmpleados() {
-  alert("Exportando empleados a Excel...")
-  // En una implementación real, se generaría un archivo Excel para descargar
-}
-
-function exportarAsistencias() {
-  alert("Exportando asistencias a Excel...")
-  // En una implementación real, se generaría un archivo Excel para descargar
-}
-
-function exportarHistorialNomina() {
-  alert("Exportando historial de nómina a Excel...")
-  // En una implementación real, se generaría un archivo Excel para descargar
-}
-
-function exportarReporteExcel() {
-  alert("Exportando reporte a Excel...")
-  // En una implementación real, se generaría un archivo Excel para descargar
-}
-
-function exportarReportePDF() {
-  alert("Exportando reporte a PDF...")
-  // En una implementación real, se generaría un archivo PDF para descargar
-}
-
-function imprimirReporte() {
-  window.print()
-}
-
-function imprimirNomina() {
-  // En una implementación real, se abriría una ventana de impresión con el contenido de la nómina
-  window.print()
-}
-
-function imprimirDetalleNomina() {
-  // En una implementación real, se abriría una ventana de impresión con el detalle de la nómina
-  window.print()
-}
-
-// Funciones para modales
-function cerrarModal(modalId) {
-  document.getElementById(modalId).style.display = "none"
-}
-
-// Funciones para limpiar formularios
-function limpiarFormulario(formId) {
-  document.getElementById(formId).reset()
-}
-
-// Funciones para ver todos los empleados y próximos pagos
-function verTodosEmpleados() {
-  // Cambiar a la sección de empleados
-  document.querySelectorAll(".nav-item").forEach((item) => {
-    item.classList.remove("active")
-  })
-
-  document.querySelectorAll(".content-section").forEach((section) => {
-    section.classList.remove("active")
-  })
-
-  // Activar sección de empleados
-  document.querySelector('[data-section="empleados"]').classList.add("active")
-  document.getElementById("empleados").classList.add("active")
-
-  // Restablecer filtros
-  document.getElementById("filtro-departamento").value = "todos"
-  document.getElementById("filtro-estado").value = "todos"
-  document.getElementById("buscar-empleado").value = ""
-
-  // Cargar todos los empleados
-  cargarTablaEmpleados()
-}
-
-function verTodosProximosPagos() {
-  // Cambiar a la sección de nómina
-  document.querySelectorAll(".nav-item").forEach((item) => {
-    item.classList.remove("active")
-  })
-
-  document.querySelectorAll(".content-section").forEach((section) => {
-    section.classList.remove("active")
-  })
-
-  // Activar sección de nómina
-  document.querySelector('[data-section="nomina"]').classList.add("active")
-  document.getElementById("nomina").classList.add("active")
-
-  // Restablecer filtros
-  document.getElementById("filtro-empleado-nomina").value = "todos"
-
-  // Cargar historial de nómina
-  cargarHistorialNomina()
-}
-
-// Función para llenar selectores de empleados
-function llenarSelectoresEmpleados() {
-  // Llenar selector de empleados para asistencias
-  const selectorAsistencia = document.getElementById("asistencia-empleado")
-  const selectorFiltroAsistencia = document.getElementById("filtro-empleado-asistencia")
-  const selectorNomina = document.getElementById("nomina-empleado")
-  const selectorFiltroNomina = document.getElementById("filtro-empleado-nomina")
-
-  // Limpiar selectores
-  if (selectorAsistencia) selectorAsistencia.innerHTML = '<option value="">Seleccionar empleado...</option>'
-  if (selectorFiltroAsistencia) selectorFiltroAsistencia.innerHTML = '<option value="todos">Todos</option>'
-  if (selectorNomina) selectorNomina.innerHTML = '<option value="">Seleccionar empleado...</option>'
-  if (selectorFiltroNomina) selectorFiltroNomina.innerHTML = '<option value="todos">Todos los empleados</option>'
-
-  // Ordenar empleados por nombre
-  const empleadosOrdenados = [...empleados].sort((a, b) => a.nombre.localeCompare(b.nombre))
-
-  // Agregar opciones a los selectores
-  empleadosOrdenados.forEach((empleado) => {
-    if (selectorAsistencia) {
-      const option = document.createElement("option")
-      option.value = empleado.id
-      option.textContent = empleado.nombre
-      selectorAsistencia.appendChild(option)
-    }
-
-    if (selectorFiltroAsistencia) {
-      const option = document.createElement("option")
-      option.value = empleado.id
-      option.textContent = empleado.nombre
-      selectorFiltroAsistencia.appendChild(option)
-    }
-
-    if (selectorNomina) {
-      const option = document.createElement("option")
-      option.value = empleado.id
-      option.textContent = empleado.nombre
-      selectorNomina.appendChild(option)
-    }
-
-    if (selectorFiltroNomina) {
-      const option = document.createElement("option")
-      option.value = empleado.id
-      option.textContent = empleado.nombre
-      selectorFiltroNomina.appendChild(option)
-    }
-  })
-}
-
-// Función para cerrar sesión
-function cerrarSesion() {
-  if (confirm("¿Está seguro que desea cerrar sesión?")) {
-    alert("Sesión cerrada correctamente")
-    // En una implementación real, aquí se redireccionaría a la página de login
-    // window.location.href = "login.html";
-  }
 }
 
 // Funciones de utilidad
@@ -2072,4 +1016,404 @@ function formatEstadoNomina(estado) {
   }
 
   return estados[estado] || estado
+}
+
+// Funciones para agregar empleados
+function inicializarBotonAgregarEmpleado() {
+  // Buscar el botón de agregar empleado
+  const btnAgregarEmpleado = document.getElementById("btn-agregar-empleado")
+
+  if (btnAgregarEmpleado) {
+    btnAgregarEmpleado.addEventListener("click", mostrarFormularioEmpleado)
+  } else {
+    console.error("No se encontró el botón de agregar empleado")
+
+    // Intentar encontrar otro botón o crear uno si no existe
+    const seccionEmpleados = document.getElementById("empleados")
+    if (seccionEmpleados) {
+      const headerSeccion = seccionEmpleados.querySelector(".section-header")
+
+      if (headerSeccion && !headerSeccion.querySelector("#btn-agregar-empleado")) {
+        const nuevoBoton = document.createElement("button")
+        nuevoBoton.id = "btn-agregar-empleado"
+        nuevoBoton.className = "btn-primary"
+        nuevoBoton.innerHTML = '<span class="material-symbols-outlined">add</span> Agregar Empleado'
+        nuevoBoton.addEventListener("click", mostrarFormularioEmpleado)
+
+        headerSeccion.appendChild(nuevoBoton)
+      }
+    }
+  }
+
+  // Crear el modal si no existe
+  crearModalEmpleado()
+}
+
+function crearModalEmpleado() {
+  // Verificar si ya existe el modal
+  if (document.getElementById("modal-empleado")) {
+    return
+  }
+
+  // Crear el modal
+  const modal = document.createElement("div")
+  modal.id = "modal-empleado"
+  modal.className = "modal"
+
+  // Contenido del modal
+  modal.innerHTML = `
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Agregar Nuevo Empleado</h3>
+        <button type="button" class="btn-close" id="btn-cerrar-modal">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="form-empleado">
+          <div class="form-group">
+            <label for="empleado-nombre">Nombre Completo *</label>
+            <input type="text" id="empleado-nombre" name="nombre" required>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="empleado-identificacion">Identificación *</label>
+              <input type="text" id="empleado-identificacion" name="identificacion" required>
+            </div>
+            <div class="form-group">
+              <label for="empleado-nacimiento">Fecha de Nacimiento *</label>
+              <input type="date" id="empleado-nacimiento" name="nacimiento" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="empleado-direccion">Dirección</label>
+            <input type="text" id="empleado-direccion" name="direccion">
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="empleado-telefono">Teléfono *</label>
+              <input type="tel" id="empleado-telefono" name="telefono" required>
+            </div>
+            <div class="form-group">
+              <label for="empleado-email">Email *</label>
+              <input type="email" id="empleado-email" name="email" required>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="empleado-departamento">Departamento *</label>
+              <select id="empleado-departamento" name="departamento" required>
+                <option value="">Seleccionar...</option>
+                <option value="recepcion">Recepción</option>
+                <option value="housekeeping">Housekeeping</option>
+                <option value="restaurante">Restaurante</option>
+                <option value="mantenimiento">Mantenimiento</option>
+                <option value="administracion">Administración</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="empleado-puesto">Puesto *</label>
+              <input type="text" id="empleado-puesto" name="puesto" required>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="empleado-ingreso">Fecha de Ingreso *</label>
+              <input type="date" id="empleado-ingreso" name="ingreso" required>
+            </div>
+            <div class="form-group">
+              <label for="empleado-estado">Estado *</label>
+              <select id="empleado-estado" name="estado" required>
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
+                <option value="vacaciones">Vacaciones</option>
+                <option value="permiso">Permiso</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="empleado-salario">Salario Mensual *</label>
+              <input type="number" id="empleado-salario" name="salario" min="0" step="100" required>
+            </div>
+            <div class="form-group">
+              <label for="empleado-jornada">Jornada *</label>
+              <select id="empleado-jornada" name="jornada" required>
+                <option value="completa">Completa</option>
+                <option value="parcial">Parcial</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="empleado-observaciones">Observaciones</label>
+            <textarea id="empleado-observaciones" name="observaciones" rows="3"></textarea>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" id="btn-cancelar-empleado">Cancelar</button>
+            <button type="submit" class="btn-primary">Guardar Empleado</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `
+
+  // Agregar el modal al body
+  document.body.appendChild(modal)
+
+  // Configurar eventos del modal
+  document.getElementById("btn-cerrar-modal").addEventListener("click", ocultarFormularioEmpleado)
+  document.getElementById("btn-cancelar-empleado").addEventListener("click", ocultarFormularioEmpleado)
+  document.getElementById("form-empleado").addEventListener("submit", guardarEmpleado)
+
+  // Agregar estilos si no existen
+  if (!document.getElementById("estilos-modal")) {
+    const estilos = document.createElement("style")
+    estilos.id = "estilos-modal"
+    estilos.textContent = `
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        overflow-y: auto;
+      }
+      
+      .modal.active {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 2rem 0;
+      }
+      
+      .modal-content {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 700px;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      
+      .modal-body {
+        padding: 1.5rem;
+      }
+      
+      .form-group {
+        margin-bottom: 1rem;
+        width: 100%;
+      }
+      
+      .form-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+      
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+      
+      input, select, textarea {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+      
+      input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: #1a237e;
+      }
+      
+      @media (max-width: 768px) {
+        .form-row {
+          flex-direction: column;
+          gap: 0;
+        }
+      }
+    `
+
+    document.head.appendChild(estilos)
+  }
+}
+
+function mostrarFormularioEmpleado() {
+  // Mostrar el modal
+  const modal = document.getElementById("modal-empleado")
+  if (modal) {
+    modal.classList.add("active")
+
+    // Establecer fecha actual en los campos de fecha
+    const hoy = new Date().toISOString().split("T")[0]
+    document.getElementById("empleado-ingreso").value = hoy
+
+    // Enfocar el primer campo
+    document.getElementById("empleado-nombre").focus()
+  }
+}
+
+function ocultarFormularioEmpleado() {
+  // Ocultar el modal
+  const modal = document.getElementById("modal-empleado")
+  if (modal) {
+    modal.classList.remove("active")
+
+    // Limpiar el formulario
+    document.getElementById("form-empleado").reset()
+  }
+}
+
+function guardarEmpleado(event) {
+  event.preventDefault()
+
+  // Obtener los valores del formulario
+  const nombre = document.getElementById("empleado-nombre").value.trim()
+  const identificacion = document.getElementById("empleado-identificacion").value.trim()
+  const nacimiento = document.getElementById("empleado-nacimiento").value
+  const direccion = document.getElementById("empleado-direccion").value.trim()
+  const telefono = document.getElementById("empleado-telefono").value.trim()
+  const email = document.getElementById("empleado-email").value.trim()
+  const departamento = document.getElementById("empleado-departamento").value
+  const puesto = document.getElementById("empleado-puesto").value.trim()
+  const ingreso = document.getElementById("empleado-ingreso").value
+  const estado = document.getElementById("empleado-estado").value
+  const salario = Number.parseFloat(document.getElementById("empleado-salario").value)
+  const jornada = document.getElementById("empleado-jornada").value
+  const observaciones = document.getElementById("empleado-observaciones").value.trim()
+
+  // Validar campos obligatorios
+  if (
+    !nombre ||
+    !identificacion ||
+    !nacimiento ||
+    !telefono ||
+    !email ||
+    !departamento ||
+    !puesto ||
+    !ingreso ||
+    !estado ||
+    isNaN(salario) ||
+    !jornada
+  ) {
+    alert("Por favor, complete todos los campos obligatorios.")
+    return
+  }
+
+  // Validar email
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alert("Por favor, ingrese un email válido.")
+    return
+  }
+
+  // Generar ID único (el mayor ID actual + 1)
+  const nuevoId = Math.max(...empleados.map((e) => e.id), 0) + 1
+
+  // Crear nuevo empleado
+  const nuevoEmpleado = {
+    id: nuevoId,
+    nombre,
+    identificacion,
+    nacimiento,
+    direccion,
+    telefono,
+    email,
+    departamento,
+    puesto,
+    ingreso,
+    estado,
+    salario,
+    jornada,
+    observaciones,
+  }
+
+  // Agregar a la lista de empleados
+  empleados.push(nuevoEmpleado)
+
+  // Actualizar la tabla de empleados
+  cargarTablaEmpleados()
+
+  // Actualizar dashboard y gráficos
+  cargarDashboard()
+
+  // Mostrar mensaje de éxito
+  alert(`Empleado ${nombre} agregado correctamente.`)
+
+  // Cerrar el modal
+  ocultarFormularioEmpleado()
+}
+
+function cargarTablaAsistencias() {
+  // Implementación existente...
+}
+
+function cargarHistorialNomina() {
+  // Implementación existente...
+}
+
+function llenarSelectoresEmpleados() {
+  // Implementación existente...
+}
+
+function cargarEmpleadosRecientes() {
+  // Implementación existente...
+}
+
+function cargarProximosPagos() {
+  // Implementación existente...
+}
+
+// Funciones para ver y editar empleados
+function verEmpleado(id) {
+  const empleado = empleados.find((e) => e.id === id)
+
+  if (!empleado) {
+    alert("Empleado no encontrado.")
+    return
+  }
+
+  // Aquí se implementaría la lógica para mostrar los detalles del empleado
+  alert(`Detalles del empleado: ${empleado.nombre}`)
+}
+
+function editarEmpleado(id) {
+  const empleado = empleados.find((e) => e.id === id)
+
+  if (!empleado) {
+    alert("Empleado no encontrado.")
+    return
+  }
+
+  // Aquí se implementaría la lógica para editar el empleado
+  alert(`Editar empleado: ${empleado.nombre}`)
 }
