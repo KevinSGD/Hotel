@@ -137,29 +137,7 @@
                             <canvas id="asistencia-chart"></canvas>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Cumpleaños y aniversarios -->
-                <div class="content-card">
-                    <div class="card-header">
-                        <h3>Próximos Cumpleaños y Aniversarios</h3>
-                    </div>
-                    <div class="events-container">
-                        <div class="events-column">
-                            <h4>Cumpleaños este mes</h4>
-                            <ul id="lista-cumpleanos" class="events-list">
-                                <!-- Se llenará dinámicamente -->
-                            </ul>
-                        </div>
-                        <div class="events-column">
-                            <h4>Aniversarios laborales</h4>
-                            <ul id="lista-aniversarios" class="events-list">
-                                <!-- Se llenará dinámicamente -->
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
+                </div>         
                 <!-- Empleados recientes -->
                 <div class="content-card">
                     <div class="card-header">
@@ -280,48 +258,6 @@
                                     <th>Estado</th>
                                     <th>Observaciones</th>
                                     <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Se llenará dinámicamente -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="content-card">
-                    <div class="card-header">
-                        <h3>Historial de Asistencias</h3>
-                        <div class="filter-actions">
-                            <div class="form-group">
-                                <label for="filtro-empleado-asistencia">Empleado:</label>
-                                <select id="filtro-empleado-asistencia" onchange="filtrarHistorialAsistencias()">
-                                    <option value="todos">Todos</option>
-                                    <!-- Se llenará dinámicamente -->
-                                </select>
-                            </div>
-                            <div class="date-range">
-                                <input type="date" id="asistencia-fecha-inicio" placeholder="Fecha inicio" onchange="filtrarHistorialAsistencias()">
-                                <span>a</span>
-                                <input type="date" id="asistencia-fecha-fin" placeholder="Fecha fin" onchange="filtrarHistorialAsistencias()">
-                            </div>
-                            <button class="btn-secondary" onclick="exportarAsistencias()">
-                                <span class="material-symbols-outlined">download</span> Exportar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="table-container">
-                        <table id="tabla-historial-asistencia">
-                            <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Empleado</th>
-                                    <th>Departamento</th>
-                                    <th>Entrada</th>
-                                    <th>Salida</th>
-                                    <th>Horas</th>
-                                    <th>Estado</th>
-                                    <th>Observaciones</th>
                                 </tr>
                             </thead>
                             <tbody>

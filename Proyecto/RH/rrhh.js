@@ -103,20 +103,6 @@ function renderizarEmpleados() {
     tbody.appendChild(row)
   })
 }
-
-function verHistorialEmpleado(id) {
-  const empleado = empleados.find(e => e.id === id)
-  const registros = asistencias.filter(a => a.id === id)
-  let historialHTML = `<h3>Historial de ${empleado.nombre} ${empleado.apellidos}</h3>`
-  historialHTML += `<ul>`
-  registros.forEach(r => {
-    historialHTML += `<li>${r.fecha} - Estado: ${r.estado}, Entrada: ${r.entrada || '-'}, Salida: ${r.salida || '-'}${r.observaciones ? ', Obs: ' + r.observaciones : ''}</li>`
-  })
-  historialHTML += `</ul>`
-  document.getElementById("modal-historial-body").innerHTML = historialHTML
-  document.getElementById("modal-historial").style.display = "block"
-}
-
 // ===== DASHBOARD =====
 function actualizarDashboard() {
   const hoy = new Date().toISOString().split("T")[0]
