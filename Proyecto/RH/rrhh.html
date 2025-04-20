@@ -42,20 +42,6 @@
                 </ul>
             </nav>
             <div class="sidebar-footer">
-                <div class="module-switcher">
-                    <a href="index.html" class="module-switch-btn">
-                        <span class="material-symbols-outlined">storefront</span>
-                        <span>Ventas</span>
-                    </a>
-                    <a href="inventario.html" class="module-switch-btn">
-                        <span class="material-symbols-outlined">inventory_2</span>
-                        <span>Inventario</span>
-                    </a>
-                    <a href="contabilidad.html" class="module-switch-btn">
-                        <span class="material-symbols-outlined">account_balance</span>
-                        <span>Contabilidad</span>
-                    </a>
-                </div>
                 <button id="logout-btn" class="logout-btn" onclick="cerrarSesion()">
                     <span class="material-symbols-outlined">logout</span>
                     <span>Cerrar Sesión</span>
@@ -180,11 +166,7 @@
                                 <input type="text" id="buscar-empleado" placeholder="Nombre o ID" onkeyup="filtrarEmpleados()">
                             </div>
                         </div>
-                        <div class="export-actions">
-                            <button type="button" class="btn-secondary" onclick="exportarEmpleados()">
-                                <span class="material-symbols-outlined">download</span> Exportar
-                            </button>
-                        </div>
+                       
                     </div>
                     
                     <div class="table-container">
@@ -236,7 +218,6 @@
                                     <th>Salida</th>
                                     <th>Estado</th>
                                     <th>Observaciones</th>
-                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -304,15 +285,6 @@
                     <div class="card-header">
                         <h3 id="titulo-nomina">Nómina</h3>
                         <div class="export-actions">
-                            <button type="button" class="btn-secondary" onclick="exportarNominaExcel()">
-                                <span class="material-symbols-outlined">download</span> Excel
-                            </button>
-                            <button type="button" class="btn-secondary" onclick="exportarNominaPDF()">
-                                <span class="material-symbols-outlined">picture_as_pdf</span> PDF
-                            </button>
-                            <button type="button" class="btn-primary" onclick="enviarNominaContabilidad()">
-                                <span class="material-symbols-outlined">send</span> Enviar a Contabilidad
-                            </button>
                         </div>
                     </div>
                     <div class="table-container">
@@ -327,7 +299,7 @@
                                     <th>Bonos</th>
                                     <th>Deducciones</th>
                                     <th>Total</th>
-                                    <th>Acciones</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -680,7 +652,7 @@
                 
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" onclick="cerrarModal('modal-detalle-nomina')">Cerrar</button>
-                    <button type="button" class="btn-primary" onclick="imprimirRecibo()">Imprimir Recibo</button>
+              
                 </div>
             </div>
         </div>
@@ -748,12 +720,6 @@
                 
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" onclick="cerrarModal('modal-ver-nomina')">Cerrar</button>
-                    <button type="button" class="btn-secondary" onclick="exportarNominaExcel()">
-                        <span class="material-symbols-outlined">download</span> Excel
-                    </button>
-                    <button type="button" class="btn-secondary" onclick="exportarNominaPDF()">
-                        <span class="material-symbols-outlined">picture_as_pdf</span> PDF
-                    </button>
                 </div>
             </div>
         </div>
