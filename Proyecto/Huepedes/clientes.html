@@ -1,1100 +1,250 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de Clientes - Sistema Hotelero</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="clientes-styles.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Clientes - Hotel</title>
+    <link rel="stylesheet" href="clientes-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <div class="app-container">
-    <!-- Sidebar / Menú lateral -->
-    <div class="sidebar">
-      <div class="sidebar-header">
-        <h1>Hotel System</h1>
-      </div>
-      <div class="sidebar-user">
-        <div class="user-avatar">A</div>
-        <div class="user-info">
-          <div class="user-name">Admin</div>
-          <div class="user-role">Administrador</div>
-        </div>
-      </div>
-      <div class="sidebar-nav">
-        <div class="nav-section">Navegación</div>
-        <div class="nav-item" data-section="dashboard">
-          <span class="material-symbols-outlined">dashboard</span>
-          <span>Dashboard</span>
-        </div>
-        <div class="nav-item" data-section="registro">
-          <span class="material-symbols-outlined">person_add</span>
-          <span>Registro de Clientes</span>
-        </div>
-        <div class="nav-item" data-section="busqueda">
-          <span class="material-symbols-outlined">search</span>
-          <span>Búsqueda de Clientes</span>
-        </div>
-        <div class="nav-item" data-section="historial">
-          <span class="material-symbols-outlined">history</span>
-          <span>Historial de Clientes</span>
-        </div>
-        <div class="nav-item" data-section="clasificacion">
-          <span class="material-symbols-outlined">stars</span>
-          <span>Clasificación de Clientes</span>
-        </div>
-        <div class="nav-section">Sistema</div>
-        <div class="nav-item">
-          <span class="material-symbols-outlined">settings</span>
-          <span>Configuración</span>
-        </div>
-      </div>
-      <button class="logout-btn">
-        <span class="material-symbols-outlined">logout</span>
-        <span>Cerrar Sesión</span>
-      </button>
-      <div class="sidebar-footer">
-        v1.0.0 © 2023 Hotel System
-      </div>
-    </div>
-
-    <!-- Contenido principal -->
-    <div class="main-content">
-      <!-- Dashboard -->
-      <div class="content-section active" id="dashboard">
-        <div class="section-header">
-          <h2>Dashboard de Clientes</h2>
-        </div>
-
-        <div class="dashboard-stats">
-          <div class="stat-card">
-            <div class="stat-icon">
-              <span class="material-symbols-outlined">group</span>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h1>Hotel</h1>
             </div>
-            <div class="stat-info">
-              <h3>Total de Clientes</h3>
-              <div class="stat-value">1,245</div>
-              <div class="stat-label">+12% este mes</div>
+            <div class="menu-header">CLIENTES</div>
+            
+            <div class="admin-profile">
+                <div class="admin-avatar">A</div>
+                <div class="admin-info">
+                    <div class="admin-name">Admins</div>
+                    <div class="admin-role">Administrador</div>
+                </div>
             </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">
-              <span class="material-symbols-outlined">hotel</span>
+            
+            <ul class="menu">
+                <li class="active">
+                    <a href="#"><i class="fas fa-th-large"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href="#" id="registrar-cliente"><i class="fas fa-user-plus"></i> Registrar Cliente</a>
+                </li>
+                <li>
+                    <a href="#" id="check-in"><i class="fas fa-sign-in-alt"></i> Check-in</a>
+                </li>
+            </ul>
+            
+            <div class="bottom-menu">
+                <a href="#" class="btn-cerrar"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+                <div class="copyright">© 2025 Hotel Manager</div>
             </div>
-            <div class="stat-info">
-              <h3>Check-ins Hoy</h3>
-              <div class="stat-value">24</div>
-              <div class="stat-label">8 pendientes</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">
-              <span class="material-symbols-outlined">logout</span>
-            </div>
-            <div class="stat-info">
-              <h3>Check-outs Hoy</h3>
-              <div class="stat-value">18</div>
-              <div class="stat-label">3 pendientes</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">
-              <span class="material-symbols-outlined">stars</span>
-            </div>
-            <div class="stat-info">
-              <h3>Clientes VIP</h3>
-              <div class="stat-value">87</div>
-              <div class="stat-label">7 hospedados actualmente</div>
-            </div>
-          </div>
         </div>
-
-        <div class="dashboard-recent">
-          <div class="recent-checkins">
-            <div class="card-header">
-              <h3>Check-ins Recientes</h3>
-              <button class="btn-text">Ver todos</button>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Dashboard de Clientes</h1>
             </div>
+            
+            <!-- Search and Filter -->
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Buscar cliente...">
+                    <button id="search-btn"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="filter-options">
+                    <select id="filter-type">
+                        <option value="todos">Todos</option>
+                        <option value="nombre">Nombre</option>
+                        <option value="documento">Documento</option>
+                        <option value="tipo">Tipo de cliente</option>
+                    </select>
+                    <button id="add-client-btn" class="btn-primary">+ Nuevo Cliente</button>
+                </div>
+            </div>
+            
+            <!-- Clients Table -->
             <div class="table-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Cliente</th>
-                    <th>Habitación</th>
-                    <th>Llegada</th>
-                    <th>Salida</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <div class="client-info">
-                        <div class="client-name">Carlos Rodríguez</div>
-                        <div class="client-type vip">VIP</div>
-                      </div>
-                    </td>
-                    <td>301 - Suite</td>
-                    <td>Hoy, 14:00</td>
-                    <td>23/04/2023</td>
-                    <td><span class="status-active">Activo</span></td>
-                    <td>
-                      <button class="btn-icon" title="Ver detalles">
-                        <span class="material-symbols-outlined">visibility</span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="client-info">
-                        <div class="client-name">María González</div>
-                        <div class="client-type frequent">Frecuente</div>
-                      </div>
-                    </td>
-                    <td>205 - Doble</td>
-                    <td>Hoy, 12:30</td>
-                    <td>20/04/2023</td>
-                    <td><span class="status-active">Activo</span></td>
-                    <td>
-                      <button class="btn-icon" title="Ver detalles">
-                        <span class="material-symbols-outlined">visibility</span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="client-info">
-                        <div class="client-name">Juan Pérez</div>
-                        <div class="client-type new">Nuevo</div>
-                      </div>
-                    </td>
-                    <td>110 - Individual</td>
-                    <td>Hoy, 10:15</td>
-                    <td>19/04/2023</td>
-                    <td><span class="status-active">Activo</span></td>
-                    <td>
-                      <button class="btn-icon" title="Ver detalles">
-                        <span class="material-symbols-outlined">visibility</span>
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="client-info">
-                        <div class="client-name">Ana Martínez</div>
-                        <div class="client-type new">Nuevo</div>
-                      </div>
-                    </td>
-                    <td>412 - Familiar</td>
-                    <td>Ayer, 16:45</td>
-                    <td>25/04/2023</td>
-                    <td><span class="status-active">Activo</span></td>
-                    <td>
-                      <button class="btn-icon" title="Ver detalles">
-                        <span class="material-symbols-outlined">visibility</span>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                <div class="table-header">
+                    <h2>Clientes Recientes</h2>
+                    <a href="#" class="view-all">Ver todos</a>
+                </div>
+                <table id="clients-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Documento</th>
+                            <th>Tipo</th>
+                            <th>Última Visita</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los datos se cargarán dinámicamente con JavaScript -->
+                    </tbody>
+                </table>
+                <div id="no-results" class="hidden">No hay clientes que coincidan con la búsqueda</div>
             </div>
-          </div>
-          <div class="client-distribution">
-            <div class="card-header">
-              <h3>Distribución de Clientes</h3>
-            </div>
-            <div class="chart-container">
-              <canvas id="clientTypeChart"></canvas>
-            </div>
-            <div class="client-types-list">
-              <div class="client-type-item">
-                <div class="type-color" style="background-color: #4CAF50;"></div>
-                <div class="type-name">Nuevos</div>
-                <div class="type-count">45%</div>
-              </div>
-              <div class="client-type-item">
-                <div class="type-color" style="background-color: #2196F3;"></div>
-                <div class="type-name">Frecuentes</div>
-                <div class="type-count">35%</div>
-              </div>
-              <div class="client-type-item">
-                <div class="type-color" style="background-color: #FFC107;"></div>
-                <div class="type-name">VIP</div>
-                <div class="type-count">20%</div>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-
-      <!-- Registro de Clientes -->
-      <div class="content-section" id="registro">
-        <div class="section-header">
-          <h2>Registro de Clientes (Check-in)</h2>
+        
+        <!-- Modal para Registrar Cliente -->
+        <div id="register-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Registrar Nuevo Cliente</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form id="register-form">
+                        <div class="form-group">
+                            <label for="nombre">Nombre Completo</label>
+                            <input type="text" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="documento">Documento de Identidad</label>
+                            <input type="text" id="documento" name="documento" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tipo">Tipo de Cliente</label>
+                            <select id="tipo" name="tipo" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="Regular">Regular</option>
+                                <option value="VIP">VIP</option>
+                                <option value="Corporativo">Corporativo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Correo Electrónico</label>
+                            <input type="email" id="email" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" name="telefono">
+                        </div>
+                        <div class="form-group">
+                            <label for="direccion">Dirección</label>
+                            <input type="text" id="direccion" name="direccion">
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" id="cancel-register">Cancelar</button>
+                            <button type="submit" class="btn-primary">Guardar Cliente</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div class="content-card">
-          <form id="clienteForm">
-            <div class="form-columns">
-              <div class="form-column">
-                <h3>Información Personal</h3>
-                <div class="form-group">
-                  <label for="tipoDocumento">Tipo de Documento</label>
-                  <select id="tipoDocumento" required>
-                    <option value="">Seleccionar...</option>
-                    <option value="dni">DNI</option>
-                    <option value="pasaporte">Pasaporte</option>
-                    <option value="cedula">Cédula</option>
-                    <option value="otro">Otro</option>
-                  </select>
+        
+        <!-- Modal para Check-in -->
+        <div id="checkin-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Registrar Check-in</h2>
+                    <span class="close">&times;</span>
                 </div>
-                <div class="form-group">
-                  <label for="numeroDocumento">Número de Documento</label>
-                  <input type="text" id="numeroDocumento" required>
+                <div class="modal-body">
+                    <form id="checkin-form">
+                        <div class="form-group">
+                            <label for="cliente-checkin">Cliente</label>
+                            <select id="cliente-checkin" name="cliente" required>
+                                <option value="">Seleccionar cliente...</option>
+                                <!-- Opciones cargadas dinámicamente -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="habitacion">Habitación</label>
+                            <select id="habitacion" name="habitacion" required>
+                                <option value="">Seleccionar habitación...</option>
+                                <option value="101">101 - Individual</option>
+                                <option value="102">102 - Doble</option>
+                                <option value="201">201 - Suite</option>
+                                <option value="202">202 - Familiar</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="fecha-entrada">Fecha de Entrada</label>
+                            <input type="date" id="fecha-entrada" name="fecha-entrada" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fecha-salida">Fecha de Salida</label>
+                            <input type="date" id="fecha-salida" name="fecha-salida" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="num-personas">Número de Personas</label>
+                            <input type="number" id="num-personas" name="num-personas" min="1" value="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="observaciones">Observaciones</label>
+                            <textarea id="observaciones" name="observaciones" rows="3"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" id="cancel-checkin">Cancelar</button>
+                            <button type="submit" class="btn-primary">Completar Check-in</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                  <label for="nombre">Nombre</label>
-                  <input type="text" id="nombre" required>
-                </div>
-                <div class="form-group">
-                  <label for="apellido">Apellido</label>
-                  <input type="text" id="apellido" required>
-                </div>
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" id="email" required>
-                </div>
-                <div class="form-group">
-                  <label for="telefono">Teléfono</label>
-                  <input type="tel" id="telefono" required>
-                </div>
-                <div class="form-group">
-                  <label for="nacionalidad">Nacionalidad</label>
-                  <input type="text" id="nacionalidad">
-                </div>
-                <div class="form-group">
-                  <label for="fechaNacimiento">Fecha de Nacimiento</label>
-                  <input type="date" id="fechaNacimiento">
-                </div>
-              </div>
-              <div class="form-column">
-                <h3>Información de Hospedaje</h3>
-                <div class="form-group">
-                  <label for="tipoHabitacion">Tipo de Habitación</label>
-                  <select id="tipoHabitacion" required>
-                    <option value="">Seleccionar...</option>
-                    <option value="individual">Individual</option>
-                    <option value="doble">Doble</option>
-                    <option value="suite">Suite</option>
-                    <option value="familiar">Familiar</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="numeroHabitacion">Número de Habitación</label>
-                  <select id="numeroHabitacion" required>
-                    <option value="">Seleccionar...</option>
-                    <option value="101">101 - Individual</option>
-                    <option value="102">102 - Individual</option>
-                    <option value="201">201 - Doble</option>
-                    <option value="202">202 - Doble</option>
-                    <option value="301">301 - Suite</option>
-                    <option value="401">401 - Familiar</option>
-                  </select>
-                </div>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="fechaEntrada">Fecha de Entrada</label>
-                    <input type="date" id="fechaEntrada" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="horaEntrada">Hora de Entrada</label>
-                    <input type="time" id="horaEntrada" required>
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="fechaSalida">Fecha de Salida</label>
-                    <input type="date" id="fechaSalida" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="horaSalida">Hora de Salida</label>
-                    <input type="time" id="horaSalida" required>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="tipoCliente">Tipo de Cliente</label>
-                  <select id="tipoCliente" required>
-                    <option value="nuevo">Nuevo</option>
-                    <option value="frecuente">Frecuente</option>
-                    <option value="vip">VIP</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="notasEspeciales">Notas Especiales (Alergias, Preferencias)</label>
-                  <textarea id="notasEspeciales" rows="4"></textarea>
-                </div>
-              </div>
             </div>
-            <div class="form-actions">
-              <button type="button" class="btn-secondary">Cancelar</button>
-              <button type="submit" class="btn-primary">
-                <span class="material-symbols-outlined">check</span>
-                Registrar Check-in
-              </button>
-            </div>
-          </form>
         </div>
-      </div>
-
-      <!-- Búsqueda de Clientes -->
-      <div class="content-section" id="busqueda">
-        <div class="section-header">
-          <h2>Búsqueda de Clientes</h2>
+        
+        <!-- Modal para Historial -->
+        <div id="history-modal" class="modal">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h2>Historial del Cliente</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="client-info">
+                        <h3 id="history-client-name">Nombre del Cliente</h3>
+                        <p id="history-client-details">Documento: <span id="history-client-doc"></span> | Tipo: <span id="history-client-type"></span></p>
+                    </div>
+                    
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="reservas">Reservas</button>
+                        <button class="tab-btn" data-tab="consumos">Consumos</button>
+                    </div>
+                    
+                    <div id="reservas-tab" class="tab-content active">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha Entrada</th>
+                                    <th>Fecha Salida</th>
+                                    <th>Habitación</th>
+                                    <th>Personas</th>
+                                    <th>Estado</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reservas-body">
+                                <!-- Datos cargados dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="consumos-tab" class="tab-content">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Concepto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="consumos-body">
+                                <!-- Datos cargados dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="content-card">
-          <div class="filters">
-            <div class="filter-group">
-              <div class="search-container">
-                <input type="text" id="searchCliente" placeholder="Buscar por nombre o documento...">
-                <button class="btn-primary">
-                  <span class="material-symbols-outlined">search</span>
-                  Buscar
-                </button>
-              </div>
-            </div>
-            <div class="filter-actions">
-              <button class="btn-secondary">
-                <span class="material-symbols-outlined">filter_list</span>
-                Filtros
-              </button>
-              <button class="btn-secondary">
-                <span class="material-symbols-outlined">download</span>
-                Exportar
-              </button>
-            </div>
-          </div>
-
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Cliente</th>
-                  <th>Documento</th>
-                  <th>Contacto</th>
-                  <th>Última Visita</th>
-                  <th>Estado</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <div class="client-info">
-                      <div class="client-name">Carlos Rodríguez</div>
-                      <div class="client-type vip">VIP</div>
-                    </div>
-                  </td>
-                  <td>DNI: 28456789</td>
-                  <td>carlos@email.com</td>
-                  <td>Actualmente</td>
-                  <td><span class="status-active">Hospedado</span></td>
-                  <td>
-                    <div class="action-buttons">
-                      <button class="btn-icon" title="Ver detalles">
-                        <span class="material-symbols-outlined">visibility</span>
-                      </button>
-                      <button class="btn-icon" title="Editar">
-                        <span class="material-symbols-outlined">edit</span>
-                      </button>
-                      <button class="btn-icon" title="Historial">
-                        <span class="material-symbols-outlined">history</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="client-info">
-                      <div class="client-name">María González</div>
-                      <div class="client-type frequent">Frecuente</div>
-                    </div>
-                  </td>
-                  <td>Pasaporte: AB123456</td>
-                  <td>maria@email.com</td>
-                  <td>Actualmente</td>
-                  <td><span class="status-active">Hospedado</span></td>
-                  <td>
-                    <div class="action-buttons">
-                      <button class="btn-icon" title="Ver detalles">
-                        <span class="material-symbols-outlined">visibility</span>
-                      </button>
-                      <button class="btn-icon" title="Editar">
-                        <span class="material-symbols-outlined">edit</span>
-                      </button>
-                      <button class="btn-icon" title="Historial">
-                        <span class="material-symbols-outlined">history</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="client-info">
-                      <div class="client-name">Roberto Sánchez</div>
-                      <div class="client-type frequent">Frecuente</div>
-                    </div>
-                  </td>
-                  <td>DNI: 34567890</td>
-                  <td>roberto@email.com</td>
-                  <td>15/03/2023</td>
-                  <td><span class="status-inactive">No hospedado</span></td>
-                  <td>
-                    <div class="action-buttons">
-                      <button class="btn-icon" title="Ver detalles">
-                        <span class="material-symbols-outlined">visibility</span>
-                      </button>
-                      <button class="btn-icon" title="Editar">
-                        <span class="material-symbols-outlined">edit</span>
-                      </button>
-                      <button class="btn-icon" title="Historial">
-                        <span class="material-symbols-outlined">history</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="client-info">
-                      <div class="client-name">Laura Martínez</div>
-                      <div class="client-type vip">VIP</div>
-                    </div>
-                  </td>
-                  <td>Pasaporte: CD789012</td>
-                  <td>laura@email.com</td>
-                  <td>02/04/2023</td>
-                  <td><span class="status-inactive">No hospedado</span></td>
-                  <td>
-                    <div class="action-buttons">
-                      <button class="btn-icon" title="Ver detalles">
-                        <span class="material-symbols-outlined">visibility</span>
-                      </button>
-                      <button class="btn-icon" title="Editar">
-                        <span class="material-symbols-outlined">edit</span>
-                      </button>
-                      <button class="btn-icon" title="Historial">
-                        <span class="material-symbols-outlined">history</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="client-info">
-                      <div class="client-name">Pedro López</div>
-                      <div class="client-type new">Nuevo</div>
-                    </div>
-                  </td>
-                  <td>DNI: 45678901</td>
-                  <td>pedro@email.com</td>
-                  <td>10/04/2023</td>
-                  <td><span class="status-inactive">No hospedado</span></td>
-                  <td>
-                    <div class="action-buttons">
-                      <button class="btn-icon" title="Ver detalles">
-                        <span class="material-symbols-outlined">visibility</span>
-                      </button>
-                      <button class="btn-icon" title="Editar">
-                        <span class="material-symbols-outlined">edit</span>
-                      </button>
-                      <button class="btn-icon" title="Historial">
-                        <span class="material-symbols-outlined">history</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="pagination">
-            <button class="btn-text" disabled>Anterior</button>
-            <div class="page-numbers">
-              <button class="btn-text active">1</button>
-              <button class="btn-text">2</button>
-              <button class="btn-text">3</button>
-              <span>...</span>
-              <button class="btn-text">10</button>
-            </div>
-            <button class="btn-text">Siguiente</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Historial de Clientes -->
-      <div class="content-section" id="historial">
-        <div class="section-header">
-          <h2>Historial de Reservas y Consumos</h2>
-        </div>
-
-        <div class="content-card">
-          <div class="client-selector">
-            <label for="clienteHistorial">Seleccionar Cliente:</label>
-            <select id="clienteHistorial">
-              <option value="">Seleccionar cliente...</option>
-              <option value="1">Carlos Rodríguez (VIP)</option>
-              <option value="2">María González (Frecuente)</option>
-              <option value="3">Roberto Sánchez (Frecuente)</option>
-              <option value="4">Laura Martínez (VIP)</option>
-              <option value="5">Pedro López (Nuevo)</option>
-            </select>
-          </div>
-
-          <div class="client-profile">
-            <div class="profile-header">
-              <div class="profile-avatar">CR</div>
-              <div class="profile-info">
-                <h3>Carlos Rodríguez</h3>
-                <div class="profile-details">
-                  <span class="client-type vip">VIP</span>
-                  <span>DNI: 28456789</span>
-                  <span>carlos@email.com</span>
-                  <span>+34 612 345 678</span>
-                </div>
-              </div>
-            </div>
-            <div class="profile-stats">
-              <div class="stat-item">
-                <div class="stat-value">12</div>
-                <div class="stat-label">Visitas</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-value">45</div>
-                <div class="stat-label">Noches</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-value">€8,750</div>
-                <div class="stat-label">Gasto Total</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-value">€2,300</div>
-                <div class="stat-label">Último Año</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="tabs">
-            <button class="tab-btn active" data-tab="reservas">Historial de Reservas</button>
-            <button class="tab-btn" data-tab="consumos">Historial de Consumos</button>
-            <button class="tab-btn" data-tab="notas">Notas Especiales</button>
-          </div>
-
-          <div class="tab-content active" id="reservas">
-            <div class="table-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Fecha</th>
-                    <th>Habitación</th>
-                    <th>Entrada</th>
-                    <th>Salida</th>
-                    <th>Noches</th>
-                    <th>Tarifa</th>
-                    <th>Total</th>
-                    <th>Estado</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>15/04/2023</td>
-                    <td>301 - Suite</td>
-                    <td>15/04/2023</td>
-                    <td>23/04/2023</td>
-                    <td>8</td>
-                    <td>€180/noche</td>
-                    <td>€1,440</td>
-                    <td><span class="status-active">Activo</span></td>
-                  </tr>
-                  <tr>
-                    <td>02/03/2023</td>
-                    <td>301 - Suite</td>
-                    <td>02/03/2023</td>
-                    <td>05/03/2023</td>
-                    <td>3</td>
-                    <td>€180/noche</td>
-                    <td>€540</td>
-                    <td><span class="status-completed">Completado</span></td>
-                  </tr>
-                  <tr>
-                    <td>15/01/2023</td>
-                    <td>205 - Doble</td>
-                    <td>15/01/2023</td>
-                    <td>20/01/2023</td>
-                    <td>5</td>
-                    <td>€120/noche</td>
-                    <td>€600</td>
-                    <td><span class="status-completed">Completado</span></td>
-                  </tr>
-                  <tr>
-                    <td>10/12/2022</td>
-                    <td>301 - Suite</td>
-                    <td>10/12/2022</td>
-                    <td>15/12/2022</td>
-                    <td>5</td>
-                    <td>€180/noche</td>
-                    <td>€900</td>
-                    <td><span class="status-completed">Completado</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="tab-content" id="consumos">
-            <div class="table-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Fecha</th>
-                    <th>Servicio</th>
-                    <th>Descripción</th>
-                    <th>Cantidad</th>
-                    <th>Precio</th>
-                    <th>Total</th>
-                    <th>Estado</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>17/04/2023</td>
-                    <td>Restaurante</td>
-                    <td>Cena - Menú Degustación</td>
-                    <td>2</td>
-                    <td>€65</td>
-                    <td>€130</td>
-                    <td><span class="status-paid">Pagado</span></td>
-                  </tr>
-                  <tr>
-                    <td>16/04/2023</td>
-                    <td>Spa</td>
-                    <td>Masaje Relajante</td>
-                    <td>1</td>
-                    <td>€85</td>
-                    <td>€85</td>
-                    <td><span class="status-paid">Pagado</span></td>
-                  </tr>
-                  <tr>
-                    <td>16/04/2023</td>
-                    <td>Minibar</td>
-                    <td>Consumo Minibar</td>
-                    <td>1</td>
-                    <td>€45</td>
-                    <td>€45</td>
-                    <td><span class="status-pending">Pendiente</span></td>
-                  </tr>
-                  <tr>
-                    <td>03/03/2023</td>
-                    <td>Restaurante</td>
-                    <td>Desayuno Buffet</td>
-                    <td>2</td>
-                    <td>€25</td>
-                    <td>€50</td>
-                    <td><span class="status-paid">Pagado</span></td>
-                  </tr>
-                  <tr>
-                    <td>03/03/2023</td>
-                    <td>Servicio a la habitación</td>
-                    <td>Cena en la habitación</td>
-                    <td>2</td>
-                    <td>€40</td>
-                    <td>€80</td>
-                    <td><span class="status-paid">Pagado</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="tab-content" id="notas">
-            <div class="special-notes">
-              <div class="note-card">
-                <div class="note-header">
-                  <h4>Preferencias de Habitación</h4>
-                  <span class="note-date">Actualizado: 15/04/2023</span>
-                </div>
-                <div class="note-content">
-                  <p>Prefiere habitaciones en pisos altos con vista a la ciudad. Solicita almohadas extra firmes y agua mineral sin gas en la habitación.</p>
-                </div>
-              </div>
-              <div class="note-card">
-                <div class="note-header">
-                  <h4>Alergias Alimentarias</h4>
-                  <span class="note-date">Actualizado: 02/03/2023</span>
-                </div>
-                <div class="note-content">
-                  <p>Alergia a los frutos secos y mariscos. Informar siempre al restaurante antes de servir cualquier comida.</p>
-                </div>
-              </div>
-              <div class="note-card">
-                <div class="note-header">
-                  <h4>Preferencias de Servicio</h4>
-                  <span class="note-date">Actualizado: 15/01/2023</span>
-                </div>
-                <div class="note-content">
-                  <p>Solicita servicio de limpieza por la tarde, no por la mañana. Prefiere periódico impreso entregado a la habitación cada mañana.</p>
-                </div>
-              </div>
-            </div>
-            <div class="form-actions">
-              <button class="btn-primary">
-                <span class="material-symbols-outlined">add</span>
-                Añadir Nota
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Clasificación de Clientes -->
-      <div class="content-section" id="clasificacion">
-        <div class="section-header">
-          <h2>Clasificación de Clientes</h2>
-        </div>
-
-        <div class="content-card">
-          <div class="filters">
-            <div class="filter-group">
-              <div class="form-group">
-                <label for="filtroClasificacion">Filtrar por Clasificación</label>
-                <select id="filtroClasificacion">
-                  <option value="todos">Todos</option>
-                  <option value="vip">VIP</option>
-                  <option value="frecuente">Frecuente</option>
-                  <option value="nuevo">Nuevo</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="ordenarPor">Ordenar por</label>
-                <select id="ordenarPor">
-                  <option value="nombre">Nombre</option>
-                  <option value="visitas">Número de Visitas</option>
-                  <option value="gasto">Gasto Total</option>
-                  <option value="ultima">Última Visita</option>
-                </select>
-              </div>
-            </div>
-            <div class="filter-actions">
-              <button class="btn-secondary">
-                <span class="material-symbols-outlined">download</span>
-                Exportar
-              </button>
-            </div>
-          </div>
-
-          <div class="client-categories">
-            <div class="category-card vip-card">
-              <div class="category-header">
-                <h3>Clientes VIP</h3>
-                <div class="category-count">87 clientes</div>
-              </div>
-              <div class="category-description">
-                <p>Clientes con más de 10 visitas o gasto superior a €5,000 en el último año. Beneficios especiales y atención personalizada.</p>
-              </div>
-              <button class="btn-text">Ver todos</button>
-            </div>
-            <div class="category-card frequent-card">
-              <div class="category-header">
-                <h3>Clientes Frecuentes</h3>
-                <div class="category-count">245 clientes</div>
-              </div>
-              <div class="category-description">
-                <p>Clientes con 3-10 visitas o gasto entre €1,000 y €5,000 en el último año. Descuentos y beneficios especiales.</p>
-              </div>
-              <button class="btn-text">Ver todos</button>
-            </div>
-            <div class="category-card new-card">
-              <div class="category-header">
-                <h3>Clientes Nuevos</h3>
-                <div class="category-count">913 clientes</div>
-              </div>
-              <div class="category-description">
-                <p>Clientes con menos de 3 visitas o primer año en el hotel. Oportunidad para convertirlos en clientes frecuentes.</p>
-              </div>
-              <button class="btn-text">Ver todos</button>
-            </div>
-          </div>
-
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Cliente</th>
-                  <th>Contacto</th>
-                  <th>Visitas</th>
-                  <th>Última Visita</th>
-                  <th>Gasto Total</th>
-                  <th>Clasificación</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <div class="client-info">
-                      <div class="client-name">Carlos Rodríguez</div>
-                    </div>
-                  </td>
-                  <td>carlos@email.com</td>
-                  <td>12</td>
-                  <td>Actualmente</td>
-                  <td>€8,750</td>
-                  <td>
-                    <select class="classification-select vip">
-                      <option value="vip" selected>VIP</option>
-                      <option value="frecuente">Frecuente</option>
-                      <option value="nuevo">Nuevo</option>
-                    </select>
-                  </td>
-                  <td>
-                    <button class="btn-icon" title="Ver detalles">
-                      <span class="material-symbols-outlined">visibility</span>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="client-info">
-                      <div class="client-name">María González</div>
-                    </div>
-                  </td>
-                  <td>maria@email.com</td>
-                  <td>8</td>
-                  <td>Actualmente</td>
-                  <td>€4,200</td>
-                  <td>
-                    <select class="classification-select frequent">
-                      <option value="vip">VIP</option>
-                      <option value="frecuente" selected>Frecuente</option>
-                      <option value="nuevo">Nuevo</option>
-                    </select>
-                  </td>
-                  <td>
-                    <button class="btn-icon" title="Ver detalles">
-                      <span class="material-symbols-outlined">visibility</span>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="client-info">
-                      <div class="client-name">Roberto Sánchez</div>
-                    </div>
-                  </td>
-                  <td>roberto@email.com</td>
-                  <td>5</td>
-                  <td>15/03/2023</td>
-                  <td>€2,800</td>
-                  <td>
-                    <select class="classification-select frequent">
-                      <option value="vip">VIP</option>
-                      <option value="frecuente" selected>Frecuente</option>
-                      <option value="nuevo">Nuevo</option>
-                    </select>
-                  </td>
-                  <td>
-                    <button class="btn-icon" title="Ver detalles">
-                      <span class="material-symbols-outlined">visibility</span>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="client-info">
-                      <div class="client-name">Laura Martínez</div>
-                    </div>
-                  </td>
-                  <td>laura@email.com</td>
-                  <td>15</td>
-                  <td>02/04/2023</td>
-                  <td>€12,500</td>
-                  <td>
-                    <select class="classification-select vip">
-                      <option value="vip" selected>VIP</option>
-                      <option value="frecuente">Frecuente</option>
-                      <option value="nuevo">Nuevo</option>
-                    </select>
-                  </td>
-                  <td>
-                    <button class="btn-icon" title="Ver detalles">
-                      <span class="material-symbols-outlined">visibility</span>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="client-info">
-                      <div class="client-name">Pedro López</div>
-                    </div>
-                  </td>
-                  <td>pedro@email.com</td>
-                  <td>1</td>
-                  <td>10/04/2023</td>
-                  <td>€450</td>
-                  <td>
-                    <select class="classification-select new">
-                      <option value="vip">VIP</option>
-                      <option value="frecuente">Frecuente</option>
-                      <option value="nuevo" selected>Nuevo</option>
-                    </select>
-                  </td>
-                  <td>
-                    <button class="btn-icon" title="Ver detalles">
-                      <span class="material-symbols-outlined">visibility</span>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="pagination">
-            <button class="btn-text" disabled>Anterior</button>
-            <div class="page-numbers">
-              <button class="btn-text active">1</button>
-              <button class="btn-text">2</button>
-              <button class="btn-text">3</button>
-              <span>...</span>
-              <button class="btn-text">10</button>
-            </div>
-            <button class="btn-text">Siguiente</button>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
-
-  <!-- Modal para detalles de cliente -->
-  <div id="clienteDetallesModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Detalles del Cliente</h3>
-        <span class="close">&times;</span>
-      </div>
-      <div class="modal-body">
-        <div class="client-profile">
-          <div class="profile-header">
-            <div class="profile-avatar">CR</div>
-            <div class="profile-info">
-              <h3>Carlos Rodríguez</h3>
-              <div class="profile-details">
-                <span class="client-type vip">VIP</span>
-                <span>DNI: 28456789</span>
-                <span>carlos@email.com</span>
-                <span>+34 612 345 678</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="info-card">
-          <h4>Información Personal</h4>
-          <div class="info-grid">
-            <div class="info-item">
-              <div class="info-label">Nombre Completo</div>
-              <div class="info-value">Carlos Rodríguez Martínez</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Documento</div>
-              <div class="info-value">DNI: 28456789</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Fecha de Nacimiento</div>
-              <div class="info-value">15/06/1985</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Nacionalidad</div>
-              <div class="info-value">Española</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Email</div>
-              <div class="info-value">carlos@email.com</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Teléfono</div>
-              <div class="info-value">+34 612 345 678</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="info-card">
-          <h4>Historial de Hospedaje</h4>
-          <div class="info-grid">
-            <div class="info-item">
-              <div class="info-label">Primera Visita</div>
-              <div class="info-value">10/12/2020</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Última Visita</div>
-              <div class="info-value">Actualmente</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Total Visitas</div>
-              <div class="info-value">12</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Noches Totales</div>
-              <div class="info-value">45</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Habitación Preferida</div>
-              <div class="info-value">Suite</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Gasto Total</div>
-              <div class="info-value">€8,750</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="info-card">
-          <h4>Notas Especiales</h4>
-          <div class="special-notes">
-            <div class="note-card">
-              <div class="note-header">
-                <h4>Preferencias de Habitación</h4>
-                <span class="note-date">Actualizado: 15/04/2023</span>
-              </div>
-              <div class="note-content">
-                <p>Prefiere habitaciones en pisos altos con vista a la ciudad. Solicita almohadas extra firmes y agua mineral sin gas en la habitación.</p>
-              </div>
-            </div>
-            <div class="note-card">
-              <div class="note-header">
-                <h4>Alergias Alimentarias</h4>
-                <span class="note-date">Actualizado: 02/03/2023</span>
-              </div>
-              <div class="note-content">
-                <p>Alergia a los frutos secos y mariscos. Informar siempre al restaurante antes de servir cualquier comida.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button class="btn-secondary">
-            <span class="material-symbols-outlined">history</span>
-            Ver Historial Completo
-          </button>
-          <button class="btn-primary">
-            <span class="material-symbols-outlined">edit</span>
-            Editar Información
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <script src="clientes.js"></script>
+    
+    <script src="clientes.js"></script>
 </body>
 </html>
