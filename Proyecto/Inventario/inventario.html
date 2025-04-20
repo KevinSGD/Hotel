@@ -47,10 +47,6 @@
                 </ul>
             </nav>
             <div class="sidebar-footer">
-                <a href="../Ventas/Index.html" class="module-switch-btn">
-                    <span class="material-symbols-outlined">storefront</span>
-                    <span>Ir a Ventas</span>
-                </a>
                 <button id="logout-btn" class="logout-btn" onclick="cerrarSesion()">
                     <span class="material-symbols-outlined">logout</span>
                     <span>Cerrar Sesión</span>
@@ -361,9 +357,6 @@
                                 <option value="inventario">Inventario</option>
                                 <option value="ventas">Ventas</option>
                             </select>
-                            <button class="btn-secondary" onclick="exportarMovimientos()">
-                                <span class="material-symbols-outlined">download</span> Exportar
-                            </button>
                         </div>
                     </div>
                     <div class="table-container">
@@ -422,11 +415,6 @@
                                 <label for="buscar-producto">Buscar:</label>
                                 <input type="text" id="buscar-producto" placeholder="Nombre o SKU" onkeyup="filtrarExistencias()">
                             </div>
-                        </div>
-                        <div class="export-actions">
-                            <button type="button" class="btn-secondary" onclick="exportarExistencias()">
-                                <span class="material-symbols-outlined">download</span> Exportar
-                            </button>
                         </div>
                     </div>
                     
@@ -506,9 +494,6 @@
                         <div class="export-actions">
                             <button type="button" class="btn-secondary" onclick="imprimirReporte()">
                                 <span class="material-symbols-outlined">print</span> Imprimir
-                            </button>
-                            <button type="button" class="btn-secondary" onclick="exportarReporteExcel()">
-                                <span class="material-symbols-outlined">download</span> Excel
                             </button>
                         </div>
                     </div>
