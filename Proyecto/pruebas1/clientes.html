@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión Hotelera - Clientes</title>
+    <link rel="stylesheet" href="clientes.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Menú lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Hotel</h1>
+                <div class="module-badge">Clientes</div>
+            </div>
+            <div class="sidebar-user">
+                <div class="user-avatar">A</div>
+                <div class="user-info">
+                    <p class="user-name">Admin</p>
+                    <p class="user-role">Administrador</p>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active" data-section="dashboard">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        <span>Dashboard</span>
+                    </li>
+                    <li class="nav-item" data-section="registro-cliente">
+                        <span class="material-symbols-outlined">person_add</span>
+                        <span>Check-in Cliente</span>
+                    </li>
+                    <li class="nav-item" data-section="buscar-cliente">
+                        <span class="material-symbols-outlined">search</span>
+                        <span>Buscar Cliente</span>
+                    </li>
+                    <li class="nav-item" data-section="historial">
+                        <span class="material-symbols-outlined">history</span>
+                        <span>Historial</span>
+                    </li>
+                    <li class="nav-item" data-section="reportes">
+                        <span class="material-symbols-outlined">summarize</span>
+                        <span>Reportes</span>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="module-switch-btn" onclick="cambiarModulo()">
+                    <span class="material-symbols-outlined">swap_horiz</span>
+                    <span>Cambiar Módulo</span>
+                </button>
+                <button id="logout-btn" class="logout-btn" onclick="cerrarSesion()">
+                    <span class="material-symbols-outlined">logout</span>
+                    <span>Cerrar Sesión</span>
+                </button>
+                <p id="current-date"></p>
+                <p>&copy; 2025 Hotel Manager</p>
+            </div>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="main-content">
+            <!-- Dashboard de Clientes -->
+            <section id="dashboard" class="content-section active">
+                <div class="section-header">
+                    <h2>Dashboard de Clientes</h2>
+                </div>
+                
+                <!-- Estadísticas de clientes -->
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <span class="material-symbols-outlined">group</span>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Total Clientes</h3>
+                            <p class="stat-value" id="total-clientes">0</p>
+                            <p class="stat-label">Registrados</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <span class="material-symbols-outlined">hotel</span>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Huéspedes Actuales</h3>
+                            <p class="stat-value" id="huespedes-actuales">0</p>
+                            <p class="stat-label">Hospedados</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <span class="material-symbols-outlined">event_available</span>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Check-ins</h3>
+                            <p class="stat-value" id="total-checkins">0</p>
+                            <p class="stat-label">Este mes</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <span class="material-symbols-outlined">event_busy</span>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Check-outs</h3>
+                            <p class="stat-value" id="total-checkouts">0</p>
+                            <p class="stat-label">Este mes</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Clientes recientes -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>Clientes Recientes</h3>
+                        <button class="btn-text" onclick="verTodosClientes()">Ver todos</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="tabla-clientes-recientes">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Documento</th>
+                                    <th>Habitación</th>
+                                    <th>Check-in</th>
+                                    <th>Check-out</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Se llenará dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Dashboard resumen -->
+                <div class="dashboard-recent">
+                    <div class="recent-movements">
+                        <div class="card-header">
+                            <h3>Consumos Recientes</h3>
+                            <button class="btn-text" onclick="verTodosConsumos()">Ver todos</button>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Cliente</th>
+                                        <th>Habitación</th>
+                                        <th>Servicio</th>
+                                        <th>Monto</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-consumos-table">
+                                    <!-- Se llenará dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="inventory-summary">
+                        <div class="card-header">
+                            <h3>Ocupación por Tipo</h3>
+                        </div>
+                        <div class="category-chart">
+                            <canvas id="ocupacion-chart"></canvas>
+                        </div>
+                        <div class="category-list" id="ocupacion-summary">
+                            <!-- Se llenará dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Registro de Cliente (Check-in) -->
+            <section id="registro-cliente" class="content-section">
+                <div class="section-header">
+                    <h2>Registro de Cliente (Check-in)</h2>
+                </div>
+                <div class="content-card">
+                    <form id="cliente-form">
+                        <div class="form-columns">
+                            <div class="form-column">
+                                <h3>Información Personal</h3>
+                                <div class="form-group">
+                                    <label for="cliente-nombre">Nombre completo:</label>
+                                    <input type="text" id="cliente-nombre" required>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="cliente-tipo-documento">Tipo de documento:</label>
+                                        <select id="cliente-tipo-documento" required>
+                                            <option value="">Seleccionar...</option>
+                                            <option value="dni">DNI</option>
+                                            <option value="pasaporte">Pasaporte</option>
+                                            <option value="cedula">Cédula</option>
+                                            <option value="otro">Otro</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cliente-documento">Número de documento:</label>
+                                        <input type="text" id="cliente-documento" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="cliente-telefono">Teléfono:</label>
+                                        <input type="tel" id="cliente-telefono" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cliente-email">Email:</label>
+                                        <input type="email" id="cliente-email">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cliente-direccion">Dirección:</label>
+                                    <input type="text" id="cliente-direccion">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="cliente-ciudad">Ciudad:</label>
+                                        <input type="text" id="cliente-ciudad">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cliente-pais">País:</label>
+                                        <input type="text" id="cliente-pais" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-column">
+                                <h3>Detalles de la Estancia</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="cliente-checkin">Fecha de Check-in:</label>
+                                        <input type="date" id="cliente-checkin" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cliente-checkout">Fecha de Check-out:</label>
+                                        <input type="date" id="cliente-checkout" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="cliente-habitacion">Habitación:</label>
+                                        <select id="cliente-habitacion" required>
+                                            <option value="">Seleccionar...</option>
+                                            <!-- Se llenará dinámicamente -->
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cliente-tipo-habitacion">Tipo de habitación:</label>
+                                        <select id="cliente-tipo-habitacion" disabled>
+                                            <option value="">Seleccionar habitación primero</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="cliente-adultos">Adultos:</label>
+                                        <input type="number" id="cliente-adultos" min="1" value="1" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cliente-ninos">Niños:</label>
+                                        <input type="number" id="cliente-ninos" min="0" value="0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cliente-tarifa">Tarifa diaria:</label>
+                                    <input type="number" id="cliente-tarifa" min="0" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cliente-notas">Notas adicionales:</label>
+                                    <textarea id="cliente-notas" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" onclick="limpiarFormulario('cliente-form')">Cancelar</button>
+                            <button type="button" class="btn-primary" onclick="registrarCliente()">Registrar Check-in</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Sección Buscar Cliente -->
+            <section id="buscar-cliente" class="content-section">
+                <div class="section-header">
+                    <h2>Buscar Cliente</h2>
+                </div>
+                <div class="content-card">
+                    <div class="filters">
+                        <div class="filter-group">
+                            <div class="form-group">
+                                <label for="buscar-cliente-texto">Buscar por nombre o documento:</label>
+                                <div class="search-container">
+                                    <input type="text" id="buscar-cliente-texto" placeholder="Ingrese nombre o número de documento">
+                                    <button type="button" class="btn-primary" onclick="buscarClientes()">
+                                        <span class="material-symbols-outlined">search</span> Buscar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="filter-group">
+                            <div class="form-group">
+                                <label for="filtro-estado">Estado:</label>
+                                <select id="filtro-estado" onchange="filtrarClientes()">
+                                    <option value="todos">Todos</option>
+                                    <option value="activo">Hospedado</option>
+                                    <option value="checkout">Check-out</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="tabla-clientes">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Documento</th>
+                                    <th>Habitación</th>
+                                    <th>Check-in</th>
+                                    <th>Check-out</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Se llenará dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Historial -->
+            <section id="historial" class="content-section">
+                <div class="section-header">
+                    <h2>Historial de Reservas y Consumos</h2>
+                </div>
+                
+                <!-- Selección de cliente para historial -->
+                <div class="content-card">
+                    <div class="filters">
+                        <div class="filter-group">
+                            <div class="form-group">
+                                <label for="historial-cliente">Seleccionar cliente:</label>
+                                <div class="search-container">
+                                    <input type="text" id="historial-cliente-buscar" placeholder="Nombre o documento del cliente">
+                                    <button type="button" class="btn-primary" onclick="buscarClienteHistorial()">
+                                        <span class="material-symbols-outlined">search</span> Buscar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Información del cliente seleccionado -->
+                <div id="cliente-info" class="content-card hidden">
+                    <div class="card-header">
+                        <h3>Información del Cliente</h3>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Nombre:</span>
+                                <span id="info-cliente-nombre" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Documento:</span>
+                                <span id="info-cliente-documento" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Teléfono:</span>
+                                <span id="info-cliente-telefono" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Email:</span>
+                                <span id="info-cliente-email" class="info-value"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Historial de reservas -->
+                    <div class="card-header">
+                        <h3>Historial de Reservas</h3>
+                    </div>
+                    <div class="table-container">
+                        <table id="tabla-historial-reservas">
+                            <thead>
+                                <tr>
+                                    <th>Fecha Check-in</th>
+                                    <th>Fecha Check-out</th>
+                                    <th>Habitación</th>
+                                    <th>Tipo</th>
+                                    <th>Tarifa</th>
+                                    <th>Total Estancia</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Se llenará dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Historial de consumos -->
+                    <div class="card-header">
+                        <h3>Historial de Consumos</h3>
+                    </div>
+                    <div class="table-container">
+                        <table id="tabla-historial-consumos">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Servicio</th>
+                                    <th>Descripción</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unit.</th>
+                                    <th>Total</th>
+                                    <th>Habitación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Se llenará dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Reportes -->
+            <section id="reportes" class="content-section">
+                <div class="section-header">
+                    <h2>Reportes de Clientes</h2>
+                </div>
+                <div class="reports-grid">
+                    <div class="report-card" onclick="generarReporteClientes()">
+                        <div class="report-icon">
+                            <span class="material-symbols-outlined">group</span>
+                        </div>
+                        <div class="report-info">
+                            <h3>Reporte de Clientes</h3>
+                            <p>Lista completa de clientes registrados</p>
+                        </div>
+                    </div>
+                    
+                    <div class="report-card" onclick="generarReporteOcupacion()">
+                        <div class="report-icon">
+                            <span class="material-symbols-outlined">hotel</span>
+                        </div>
+                        <div class="report-info">
+                            <h3>Ocupación Actual</h3>
+                            <p>Estado actual de ocupación del hotel</p>
+                        </div>
+                    </div>
+                    
+                    <div class="report-card" onclick="generarReporteConsumos()">
+                        <div class="report-icon">
+                            <span class="material-symbols-outlined">receipt_long</span>
+                        </div>
+                        <div class="report-info">
+                            <h3>Consumos por Cliente</h3>
+                            <p>Detalle de consumos por cliente</p>
+                        </div>
+                    </div>
+                    
+                    <div class="report-card" onclick="generarReporteEstadisticas()">
+                        <div class="report-icon">
+                            <span class="material-symbols-outlined">analytics</span>
+                        </div>
+                        <div class="report-info">
+                            <h3>Estadísticas</h3>
+                            <p>Estadísticas generales de clientes</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-card hidden" id="reporte-generado">
+                    <div class="card-header">
+                        <h3 id="reporte-titulo">Reporte</h3>
+                        <div class="export-actions">
+                            <button type="button" class="btn-secondary" onclick="imprimirReporte()">
+                                <span class="material-symbols-outlined">print</span> Imprimir
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="reporte-contenido">
+                        <!-- El contenido del reporte se generará dinámicamente -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modales -->
+    <div id="ver-cliente-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Detalles del Cliente</h3>
+                <span class="close" onclick="cerrarModal('ver-cliente-modal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="info-card">
+                    <h4>Información Personal</h4>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Nombre:</span>
+                            <span id="modal-cliente-nombre" class="info-value"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Documento:</span>
+                            <span id="modal-cliente-documento" class="info-value"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Teléfono:</span>
+                            <span id="modal-cliente-telefono" class="info-value"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email:</span>
+                            <span id="modal-cliente-email" class="info-value"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Dirección:</span>
+                            <span id="modal-cliente-direccion" class="info-value"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Ciudad:</span>
+                            <span id="modal-cliente-ciudad" class="info-value"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">País:</span>
+                            <span id="modal-cliente-pais" class="info-value"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <h4>Estancia Actual</h4>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Habitación:</span>
+                            <span id="modal-cliente-habitacion" class="info-value"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Tipo:</span>
+                            <span id="modal-cliente-tipo-habitacion" class="info-value"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Check-in:</span>
+                            <span id="modal-cliente-checkin" class="info-value"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Check-out:</span>
+                            <span id="modal-cliente-checkout" class="info-value"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Adultos:</span>
+                            <span id="modal-cliente-adultos" class="info-value"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Niños:</span>
+                            <span id="modal-cliente-ninos" class="info-value"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Tarifa diaria:</span>
+                            <span id="modal-cliente-tarifa" class="info-value"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Estado:</span>
+                            <span id="modal-cliente-estado" class="info-value"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="cerrarModal('ver-cliente-modal')">Cerrar</button>
+                    <button type="button" class="btn-primary" id="btn-registrar-consumo" onclick="abrirRegistroConsumo()">Registrar Consumo</button>
+                    <button type="button" class="btn-primary" id="btn-checkout" onclick="realizarCheckout()">Realizar Check-out</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="registrar-consumo-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Registrar Consumo</h3>
+                <span class="close" onclick="cerrarModal('registrar-consumo-modal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="consumo-form">
+                    <input type="hidden" id="consumo-cliente-id">
+                    <div class="form-group">
+                        <label for="consumo-servicio">Servicio:</label>
+                        <select id="consumo-servicio" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="restaurante">Restaurante</option>
+                            <option value="bar">Bar</option>
+                            <option value="minibar">Minibar</option>
+                            <option value="spa">Spa</option>
+                            <option value="lavanderia">Lavandería</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="consumo-descripcion">Descripción:</label>
+                        <input type="text" id="consumo-descripcion" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="consumo-cantidad">Cantidad:</label>
+                            <input type="number" id="consumo-cantidad" min="1" value="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="consumo-precio">Precio unitario:</label>
+                            <input type="number" id="consumo-precio" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="consumo-fecha">Fecha:</label>
+                        <input type="date" id="consumo-fecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="consumo-notas">Notas:</label>
+                        <textarea id="consumo-notas" rows="2"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="cerrarModal('registrar-consumo-modal')">Cancelar</button>
+                        <button type="button" class="btn-primary" onclick="guardarConsumo()">Guardar Consumo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>Realizar Check-out</h3>
+                <span class="close" onclick="cerrarModal('checkout-modal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="info-card">
+                    <h4>Información del Cliente</h4>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Nombre:</span>
+                            <span id="checkout-cliente-nombre" class="info-value"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Habitación:</span>
+                            <span id="checkout-cliente-habitacion" class="info-value"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Check-in:</span>
+                            <span id="checkout-cliente-checkin" class="info-value"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Check-out:</span>
+                            <span id="checkout-cliente-checkout" class="info-value"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <h4>Resumen de Estancia</h4>
+                    <div class="table-container">
+                        <table id="tabla-checkout-resumen">
+                            <thead>
+                                <tr>
+                                    <th>Concepto</th>
+                                    <th>Detalle</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Se llenará dinámicamente -->
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" class="text-right"><strong>Total a pagar:</strong></td>
+                                    <td id="checkout-total" class="text-right"><strong>0.00</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="checkout-metodo-pago">Método de pago:</label>
+                    <select id="checkout-metodo-pago" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="efectivo">Efectivo</option>
+                        <option value="tarjeta">Tarjeta de crédito/débito</option>
+                        <option value="transferencia">Transferencia bancaria</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="checkout-notas">Notas adicionales:</label>
+                    <textarea id="checkout-notas" rows="2"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="cerrarModal('checkout-modal')">Cancelar</button>
+                    <button type="button" class="btn-primary" onclick="confirmarCheckout()">Confirmar Check-out</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- Tu script principal -->
+<script src="clientes.js"></script>
+</body>
+</html>
